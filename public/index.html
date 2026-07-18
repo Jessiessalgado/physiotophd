@@ -1,258 +1,150 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <!-- ============================================================
-       META
-       ============================================================ -->
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Jessica Salgado — Physiotherapist &amp; Researcher</title>
-  <meta name="description" content="Bridging Physiotherapy and Technology — innovative approaches in neurorehabilitation using VR, biomechanics and digital health." />
-
-  <!-- ============================================================
-       FONTS (Google Fonts)
-       - Dancing Script: brand name (script/handwritten style)
-       - Inter: body + UI typography
-       ============================================================ -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600;700&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-
-  <!-- ============================================================
-       ICONS (Font Awesome via CDN)
-       Later, on Blogger, these can be swapped for SVGs placed in
-       /assets/icons/ if a CDN dependency is not desired.
-       ============================================================ -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" />
-
-  <!-- ============================================================
-       STYLESHEET
-       ============================================================ -->
-  <link rel="stylesheet" href="/style.css" />
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Jessica Salgado — Physiotherapist & Researcher</title>
+<meta name="description" content="Bridging Physiotherapy and Technology — innovative approaches in neurorehabilitation using VR, biomechanics and digital health." />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600;700&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" />
+<link rel="stylesheet" href="/style.css" />
 </head>
 <body>
-
-  <!-- ============================================================
-       HEADER
-       Contains: brand (logo + name + role), main navigation,
-       header actions (search, theme toggle, language switcher).
-       ============================================================ -->
-  <header class="site-header" role="banner">
-    <div class="site-header__inner">
-
-      <!-- Brand -->
-      <a class="brand" href="#" aria-label="Jessica Salgado home">
-        <span class="brand__logo" aria-hidden="true">
-          <!-- Inline SVG logo (brain silhouette) -->
+  <header class="site-header">
+    <div class="header-inner">
+      <a class="brand" href="#">
+        <div class="brand-logo">
           <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M32 8c-6 0-11 4-12 9-4 1-7 5-7 9 0 3 1 5 3 7-1 2-1 4 0 6 1 3 4 5 7 5 1 4 5 7 9 7s8-3 9-7c3 0 6-2 7-5 1-2 1-4 0-6 2-2 3-4 3-7 0-4-3-8-7-9-1-5-6-9-12-9z" stroke="#1e3a8a" stroke-width="2" fill="none"/>
             <path d="M22 26c2-2 5-2 7 0M35 26c2-2 5-2 7 0M22 40c3 3 7 4 10 4s7-1 10-4M32 20v24" stroke="#3b82f6" stroke-width="1.5" fill="none" stroke-linecap="round"/>
           </svg>
-        </span>
-        <span class="brand__text">
-          <span class="brand__name">Jessica Salgado</span>
-          <span class="brand__role">Physiotherapist | Researcher</span>
-        </span>
+        </div>
+        <div class="brand-text">
+          <span class="brand-name">Jessica Salgado</span>
+          <span class="brand-role">Physiotherapist | Researcher</span>
+        </div>
       </a>
-
-      <!-- Main navigation -->
-      <nav class="main-nav" role="navigation" aria-label="Main">
-        <a href="#" class="main-nav__link main-nav__link--active">Home</a>
-        <a href="#" class="main-nav__link">About</a>
-        <a href="#" class="main-nav__link">Research</a>
-        <a href="#" class="main-nav__link">Publications</a>
-        <a href="#" class="main-nav__link">Blog</a>
-        <a href="#" class="main-nav__link">Contact</a>
+      <nav class="main-nav">
+        <a href="#" class="nav-link active">Home</a>
+        <a href="#" class="nav-link">About</a>
+        <a href="#" class="nav-link">Research</a>
+        <a href="#" class="nav-link">Publications</a>
+        <a href="#" class="nav-link">Blog</a>
+        <a href="#" class="nav-link">Contact</a>
       </nav>
-
-      <!-- Header actions -->
       <div class="header-actions">
-        <button class="icon-button" aria-label="Search">
-          <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
-        </button>
-        <button class="icon-button icon-button--filled theme-toggle" aria-label="Toggle theme">
-          <i class="fa-solid fa-moon" aria-hidden="true"></i>
-        </button>
-        <button class="language-button" aria-label="Language">
-          EN <i class="fa-solid fa-chevron-down" aria-hidden="true"></i>
-        </button>
+        <button class="icon-btn" aria-label="Search"><i class="fa-solid fa-magnifying-glass"></i></button>
+        <button class="icon-btn theme-toggle" aria-label="Toggle theme"><i class="fa-solid fa-moon"></i></button>
+        <button class="lang-btn" aria-label="Language">EN <i class="fa-solid fa-chevron-down"></i></button>
       </div>
-
     </div>
   </header>
 
-  <!-- ============================================================
-       HERO
-       Full-width photograph with a soft left-side gradient fade,
-       overlaid by title, description, divider and CTAs.
-       ============================================================ -->
-  <section class="hero" aria-labelledby="hero-title">
-
-    <!-- Background image (occupies the whole section) -->
-    <div class="hero__image">
-      <img src="/assets/images/hero.jpg" alt="Child in a neurorehabilitation research lab" />
-    </div>
-
-    <!-- Overlaid text content -->
-    <div class="hero__content">
-      <h1 id="hero-title" class="hero__title">
+  <section class="hero">
+    <div class="hero-bg"></div>
+    <div class="hero-brain"></div>
+    <div class="hero-content">
+      <h1>
         Bridging<br />
         Physiotherapy<br />
-        <span class="hero__title-accent">and Technology</span>
+        <span class="grad-text">and Technology</span>
       </h1>
-
-      <p class="hero__description">
-        Exploring innovative approaches in<br />
-        neurorehabilitation using virtual reality,<br />
-        biomechanics and digital health.
-      </p>
-
-      <span class="hero__divider" aria-hidden="true"></span>
-
-      <div class="hero__actions">
-        <a href="#articles" class="button button--primary">
-          Explore Articles
-          <i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
-        </a>
-        <a href="#about" class="button button--outline">About Me</a>
+      <p>Exploring innovative approaches in<br />neurorehabilitation using virtual reality,<br />biomechanics and digital health.</p>
+      <div class="hero-divider"></div>
+      <div class="hero-actions">
+        <a href="#articles" class="btn btn-primary">Explore Articles <i class="fa-solid fa-arrow-right"></i></a>
+        <a href="#about" class="btn btn-outline">About Me</a>
       </div>
     </div>
-
-    <!-- Scroll-down indicator (floating between hero and next section) -->
-    <button class="scroll-indicator" aria-label="Scroll to next section">
-      <i class="fa-solid fa-chevron-down" aria-hidden="true"></i>
-    </button>
+    <div class="hero-image">
+      <img src="/assets/hero.jpg" alt="Neurorehabilitation research lab" />
+    </div>
+    <button class="scroll-down" aria-label="Scroll down"><i class="fa-solid fa-chevron-down"></i></button>
   </section>
 
-  <!-- ============================================================
-       RESEARCH AREAS
-       Horizontal card carousel showcasing research categories.
-       ============================================================ -->
-  <section class="research-areas" aria-labelledby="research-title">
-    <header class="section-header">
-      <span class="section-header__bar" aria-hidden="true"></span>
-      <h2 id="research-title" class="section-header__title">Research Areas</h2>
-    </header>
-
-    <div class="research-areas__wrapper">
-      <ul class="research-areas__track">
-
-        <li class="area-card">
-          <span class="area-card__icon"><i class="fa-solid fa-brain" aria-hidden="true"></i></span>
-          <span class="area-card__label">Neurorehabilitation</span>
-        </li>
-
-        <li class="area-card">
-          <span class="area-card__icon"><i class="fa-solid fa-vr-cardboard" aria-hidden="true"></i></span>
-          <span class="area-card__label">Virtual Reality</span>
-        </li>
-
-        <li class="area-card">
-          <span class="area-card__icon"><i class="fa-solid fa-person-running" aria-hidden="true"></i></span>
-          <span class="area-card__label">Biomechanics</span>
-        </li>
-
-        <li class="area-card">
-          <span class="area-card__icon"><i class="fa-solid fa-heart-pulse" aria-hidden="true"></i></span>
-          <span class="area-card__label">Wearable Technology</span>
-        </li>
-
-        <li class="area-card">
-          <span class="area-card__icon"><i class="fa-solid fa-robot" aria-hidden="true"></i></span>
-          <span class="area-card__label">Robotics &amp; Automation</span>
-        </li>
-
-        <li class="area-card">
-          <span class="area-card__icon"><i class="fa-solid fa-brain" aria-hidden="true"></i></span>
-          <span class="area-card__label">Motor Learning</span>
-        </li>
-
-        <li class="area-card">
-          <span class="area-card__icon"><i class="fa-solid fa-child-reaching" aria-hidden="true"></i></span>
-          <span class="area-card__label">Pediatric Rehabilitation</span>
-        </li>
-
-      </ul>
-
-      <button class="carousel-arrow" aria-label="Next research areas">
-        <i class="fa-solid fa-chevron-right" aria-hidden="true"></i>
-      </button>
+  <section class="research-areas">
+    <div class="section-head">
+      <span class="section-bar"></span>
+      <h2>Research Areas</h2>
+    </div>
+    <div class="areas-wrap">
+      <div class="areas-track">
+        <div class="area-card">
+          <div class="area-icon"><i class="fa-solid fa-brain"></i></div>
+          <span>Neurorehabilitation</span>
+        </div>
+        <div class="area-card">
+          <div class="area-icon"><i class="fa-solid fa-vr-cardboard"></i></div>
+          <span>Virtual Reality</span>
+        </div>
+        <div class="area-card">
+          <div class="area-icon"><i class="fa-solid fa-person-running"></i></div>
+          <span>Biomechanics</span>
+        </div>
+        <div class="area-card">
+          <div class="area-icon"><i class="fa-solid fa-heart-pulse"></i></div>
+          <span>Wearable Technology</span>
+        </div>
+        <div class="area-card">
+          <div class="area-icon"><i class="fa-solid fa-robot"></i></div>
+          <span>Robotics & Automation</span>
+        </div>
+        <div class="area-card">
+          <div class="area-icon"><i class="fa-solid fa-brain"></i></div>
+          <span>Motor Learning</span>
+        </div>
+        <div class="area-card">
+          <div class="area-icon"><i class="fa-solid fa-child-reaching"></i></div>
+          <span>Pediatric Rehabilitation</span>
+        </div>
+      </div>
+      <button class="carousel-arrow" aria-label="Next"><i class="fa-solid fa-chevron-right"></i></button>
     </div>
   </section>
 
-  <!-- ============================================================
-       LATEST ARTICLES
-       Article previews + author card.
-       On Blogger, article cards can be replaced by a post loop.
-       ============================================================ -->
-  <section class="latest-articles" id="articles" aria-labelledby="latest-title">
-    <header class="latest-articles__header">
-      <h2 id="latest-title" class="latest-articles__title">Latest Articles</h2>
-      <a href="#" class="latest-articles__view-all">
-        View all <i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
-      </a>
-    </header>
-
-    <div class="latest-articles__grid">
-
-      <!-- Article 1 -->
+  <section class="latest" id="articles">
+    <div class="latest-head">
+      <h2>Latest Articles</h2>
+      <a href="#" class="view-all">View all <i class="fa-solid fa-arrow-right"></i></a>
+    </div>
+    <div class="latest-grid">
       <article class="article-card">
-        <div class="article-card__media">
-          <img src="/assets/images/article1.jpg" alt="Virtual Reality article thumbnail" />
-          <span class="article-card__tag article-card__tag--vr">Virtual Reality</span>
-          <button class="favorite-button" aria-label="Favorite this article">
-            <i class="fa-regular fa-heart" aria-hidden="true"></i>
-          </button>
+        <div class="article-media">
+          <img src="/assets/article1.jpg" alt="Virtual Reality article" />
+          <span class="tag tag-vr">Virtual Reality</span>
+          <button class="fav-btn" aria-label="Favorite"><i class="fa-regular fa-heart"></i></button>
         </div>
       </article>
-
-      <!-- Article 2 -->
       <article class="article-card">
-        <div class="article-card__media">
-          <img src="/assets/images/article2.jpg" alt="Biomechanics article thumbnail" />
-          <span class="article-card__tag article-card__tag--bio">Biomechanics</span>
-          <button class="favorite-button" aria-label="Favorite this article">
-            <i class="fa-regular fa-heart" aria-hidden="true"></i>
-          </button>
+        <div class="article-media">
+          <img src="/assets/article2.jpg" alt="Biomechanics article" />
+          <span class="tag tag-bio">Biomechanics</span>
+          <button class="fav-btn" aria-label="Favorite"><i class="fa-regular fa-heart"></i></button>
         </div>
       </article>
-
-      <!-- Article 3 -->
       <article class="article-card">
-        <div class="article-card__media">
-          <img src="/assets/images/article3.jpg" alt="Neurorehabilitation article thumbnail" />
-          <span class="article-card__tag article-card__tag--neuro">Neurorehabilitation</span>
-          <button class="favorite-button" aria-label="Favorite this article">
-            <i class="fa-regular fa-heart" aria-hidden="true"></i>
-          </button>
+        <div class="article-media">
+          <img src="/assets/article3.jpg" alt="Neurorehabilitation article" />
+          <span class="tag tag-neuro">Neurorehabilitation</span>
+          <button class="fav-btn" aria-label="Favorite"><i class="fa-regular fa-heart"></i></button>
         </div>
       </article>
-
-      <!-- Author card (sidebar-like widget) -->
-      <aside class="author-card" aria-label="About the author">
-        <div class="author-card__photo">
-          <img src="/assets/images/jessica.jpg" alt="Photo of Jessica Salgado" />
+      <aside class="author-card">
+        <div class="author-photo">
+          <img src="/assets/jessica.jpg" alt="Jessica" />
         </div>
-        <div class="author-card__body">
-          <h3 class="author-card__title">Hi, I'm Jessica.</h3>
-          <p class="author-card__description">
-            Physiotherapist passionate about neurorehabilitation, technology
-            and evidence-based practice.
-          </p>
-          <a href="#" class="author-card__link">
-            Learn more about my journey
-            <i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
-          </a>
+        <div class="author-body">
+          <h3>Hi, I'm Jessica.</h3>
+          <p>Physiotherapist passionate about neurorehabilitation, technology and evidence-based practice.</p>
+          <a href="#" class="author-link">Learn more about my journey <i class="fa-solid fa-arrow-right"></i></a>
         </div>
-        <span class="author-card__decoration" aria-hidden="true"></span>
+        <div class="author-deco"></div>
       </aside>
-
     </div>
   </section>
 
-  <!-- ============================================================
-       SCRIPTS
-       ============================================================ -->
   <script src="/script.js"></script>
 </body>
 </html>
