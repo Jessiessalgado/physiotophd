@@ -2,7 +2,7 @@ import { createFileRoute, Link, useSearch } from "@tanstack/react-router";
 import { listPublishedPosts } from "@/lib/posts.functions";
 import { CATEGORIES, CATEGORY_LABEL } from "@/lib/categories";
 
-export const Route = createFileRoute("/blog")({
+export const Route = createFileRoute("/blog/")({
   validateSearch: (s: Record<string, unknown>) => ({
     category: typeof s.category === "string" ? s.category : undefined,
   }),
