@@ -25,7 +25,7 @@ function Editor() {
   const [form, setForm] = useState({
     id: undefined as string | undefined,
     title: "", slug: "", excerpt: "", content: "",
-    cover_image_url: "", category: CATEGORIES[0].slug, published: false,
+    cover_image_url: "", category: CATEGORIES[0].slug as string, published: false,
   });
   const [busy, setBusy] = useState(false);
   const [err, setErr] = useState<string | null>(null);
