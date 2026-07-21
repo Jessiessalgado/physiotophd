@@ -1,0 +1,107 @@
+name: Security Scan
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  schedule:
+    # Weekly re-scan to catch newly disclosed vulnerabilities
+    - cron: "0 6 * * 1"
+  workflow_dispatch:
+
+jobs:
+  supabase-lint:
+    name: Supabase DB Lint (RLS / RPC / policies)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Supabase CLI
+        uses: supabase/setup-cli@v1
+        with:
+          version: latest
+
+      - name: Run Supabase DB linter
+        # Requires repo secret SUPABASE_DB_URL (Postgres connection string).
+        # Flags missing RLS, overly-permissive policies, SECURITY DEFINER
+        # functions callable by `authenticated`, exposed auth schema, etc.
+        env:
+          SUPABASE_DB_URL: ${{ secrets.SUPABASE_DB_URL }}
+        run: |
+          if [ -z "$SUPABASE_DB_URL" ]; then
+            echo "::error::SUPABASE_DB_URL secret is not set. Add it in repo Settings → Secrets."
+            exit 1
+          fi
+          supabase db lint --db-url "$SUPABASE_DB_URL" --level warning --fail-on warning
+
+  dependency-audit:
+    name: Dependency Vulnerability Audit
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+      - name: Install deps (frozen lockfile)
+        run: bun install --frozen-lockfile
+      - name: Audit dependencies
+        run: bun audit --prod
+
+  secret-scan:
+    name: Secret Scan
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Gitleaks
+        uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  rls-code-checks:
+    name: Static checks for RLS/RPC anti-patterns
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Fail on service-role key used outside *.server.ts
+        run: |
+          set -e
+          # supabaseAdmin (service role, bypasses RLS) must only be imported
+          # from client.server.ts, and only inside server handlers.
+          MATCHES=$(grep -RIn --include='*.ts' --include='*.tsx' \
+            -e 'SUPABASE_SERVICE_ROLE_KEY' \
+            -e "from ['\"]@/integrations/supabase/client.server['\"]" \
+            src \
+            | grep -Ev '\.server\.ts:|\.functions\.ts:|routes/api/' || true)
+          if [ -n "$MATCHES" ]; then
+            echo "::error::Service-role client referenced outside server-only files:"
+            echo "$MATCHES"
+            exit 1
+          fi
+      - name: Fail on new supabase/functions edge functions
+        run: |
+          if [ -d supabase/functions ] && [ -n "$(ls -A supabase/functions 2>/dev/null)" ]; then
+            echo "::error::supabase/functions/ is not allowed on TanStack Start. Use createServerFn or a route under src/routes/api/."
+            ls supabase/functions
+            exit 1
+          fi
+      - name: Fail on CREATE TABLE without GRANT / RLS in migrations
+        run: |
+          set -e
+          FAIL=0
+          for f in supabase/migrations/*.sql; do
+            [ -f "$f" ] || continue
+            if grep -qiE 'create table (if not exists )?public\.' "$f"; then
+              if ! grep -qiE 'enable row level security' "$f"; then
+                echo "::error file=$f::CREATE TABLE public.* without ENABLE ROW LEVEL SECURITY"
+                FAIL=1
+              fi
+              if ! grep -qiE '^\s*grant ' "$f"; then
+                echo "::error file=$f::CREATE TABLE public.* without GRANT statements"
+                FAIL=1
+              fi
+            fi
+          done
+          exit $FAIL
