@@ -28,7 +28,7 @@ function esc(s: string | null | undefined) {
     .replace(/'/g, "&apos;");
 }
 
-export const Route = createFileRoute("/api/public/blogger-theme.xml")({
+export const Route = createFileRoute("/api/public/blogger-theme/xml")({
   server: {
     handlers: {
       GET: async () => {

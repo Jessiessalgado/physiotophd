@@ -17,6 +17,7 @@ import { Route as BlogSlugRouteImport } from './routes/blog.$slug'
 import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
 import { Route as AuthenticatedAdminIdRouteImport } from './routes/_authenticated/admin.$id'
 import { Route as ApiPublicPostImageSplatRouteImport } from './routes/api/public/post-image.$'
+import { Route as ApiPublicBloggerThemeXmlRouteImport } from './routes/api/public/blogger-theme.xml'
 
 const AuthRoute = AuthRouteImport.update({
   id: '/auth',
@@ -57,6 +58,12 @@ const ApiPublicPostImageSplatRoute = ApiPublicPostImageSplatRouteImport.update({
   path: '/api/public/post-image/$',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiPublicBloggerThemeXmlRoute =
+  ApiPublicBloggerThemeXmlRouteImport.update({
+    id: '/api/public/blogger-theme/xml',
+    path: '/api/public/blogger-theme/xml',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -65,6 +72,7 @@ export interface FileRoutesByFullPath {
   '/blog/$slug': typeof BlogSlugRoute
   '/blog/': typeof BlogIndexRoute
   '/admin/$id': typeof AuthenticatedAdminIdRoute
+  '/api/public/blogger-theme/xml': typeof ApiPublicBloggerThemeXmlRoute
   '/api/public/post-image/$': typeof ApiPublicPostImageSplatRoute
 }
 export interface FileRoutesByTo {
@@ -74,6 +82,7 @@ export interface FileRoutesByTo {
   '/blog/$slug': typeof BlogSlugRoute
   '/blog': typeof BlogIndexRoute
   '/admin/$id': typeof AuthenticatedAdminIdRoute
+  '/api/public/blogger-theme/xml': typeof ApiPublicBloggerThemeXmlRoute
   '/api/public/post-image/$': typeof ApiPublicPostImageSplatRoute
 }
 export interface FileRoutesById {
@@ -85,6 +94,7 @@ export interface FileRoutesById {
   '/blog/$slug': typeof BlogSlugRoute
   '/blog/': typeof BlogIndexRoute
   '/_authenticated/admin/$id': typeof AuthenticatedAdminIdRoute
+  '/api/public/blogger-theme/xml': typeof ApiPublicBloggerThemeXmlRoute
   '/api/public/post-image/$': typeof ApiPublicPostImageSplatRoute
 }
 export interface FileRouteTypes {
@@ -96,6 +106,7 @@ export interface FileRouteTypes {
     | '/blog/$slug'
     | '/blog/'
     | '/admin/$id'
+    | '/api/public/blogger-theme/xml'
     | '/api/public/post-image/$'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -105,6 +116,7 @@ export interface FileRouteTypes {
     | '/blog/$slug'
     | '/blog'
     | '/admin/$id'
+    | '/api/public/blogger-theme/xml'
     | '/api/public/post-image/$'
   id:
     | '__root__'
@@ -115,6 +127,7 @@ export interface FileRouteTypes {
     | '/blog/$slug'
     | '/blog/'
     | '/_authenticated/admin/$id'
+    | '/api/public/blogger-theme/xml'
     | '/api/public/post-image/$'
   fileRoutesById: FileRoutesById
 }
@@ -124,6 +137,7 @@ export interface RootRouteChildren {
   AuthRoute: typeof AuthRoute
   BlogSlugRoute: typeof BlogSlugRoute
   BlogIndexRoute: typeof BlogIndexRoute
+  ApiPublicBloggerThemeXmlRoute: typeof ApiPublicBloggerThemeXmlRoute
   ApiPublicPostImageSplatRoute: typeof ApiPublicPostImageSplatRoute
 }
 
@@ -185,6 +199,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiPublicPostImageSplatRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/public/blogger-theme/xml': {
+      id: '/api/public/blogger-theme/xml'
+      path: '/api/public/blogger-theme/xml'
+      fullPath: '/api/public/blogger-theme/xml'
+      preLoaderRoute: typeof ApiPublicBloggerThemeXmlRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -216,6 +237,7 @@ const rootRouteChildren: RootRouteChildren = {
   AuthRoute: AuthRoute,
   BlogSlugRoute: BlogSlugRoute,
   BlogIndexRoute: BlogIndexRoute,
+  ApiPublicBloggerThemeXmlRoute: ApiPublicBloggerThemeXmlRoute,
   ApiPublicPostImageSplatRoute: ApiPublicPostImageSplatRoute,
 }
 export const routeTree = rootRouteImport
