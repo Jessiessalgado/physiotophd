@@ -68,7 +68,7 @@ export const updateCategory = createServerFn({ method: "POST" })
   .inputValidator((d: { slug: string; new_slug?: string; label?: string; sort_order?: number }) => d)
   .handler(async ({ data, context }) => {
     await requireAdmin(context);
-    const patch: Record<string, any> = {};
+    const patch: { label?: string; sort_order?: number; slug?: string } = {};
     if (data.label !== undefined) patch.label = data.label.trim();
     if (data.sort_order !== undefined) patch.sort_order = data.sort_order;
     let finalSlug = data.slug;
