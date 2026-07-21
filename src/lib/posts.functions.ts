@@ -96,11 +96,7 @@ export const bootstrapFirstAdmin = createServerFn({ method: "POST" })
 export const checkIsAdmin = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }) => {
-    const { data } = await context.supabase.rpc("has_role", {
-      _user_id: context.userId,
-      _role: "admin",
-    });
-    return { isAdmin: Boolean(data) };
+    return { isAdmin: await isAdmin(context) };
   });
 
 export const listAllPostsAdmin = createServerFn({ method: "GET" })
