@@ -1,21 +1,24 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { getPostBySlug } from "@/lib/posts.functions";
-import { CATEGORY_LABEL } from "@/lib/categories";
+import { listCategories } from "@/lib/categories.functions";
 
 export const Route = createFileRoute("/blog/$slug")({
   loader: async ({ params }) => {
-    const post = await getPostBySlug({ data: { slug: params.slug } });
+    const [post, categories] = await Promise.all([
+      getPostBySlug({ data: { slug: params.slug } }),
+      listCategories(),
+    ]);
     if (!post) throw notFound();
-    return post;
+    return { post, categories };
   },
   head: ({ loaderData }) => ({
     meta: loaderData
       ? [
-          { title: `${loaderData.title} — Jessica Salgado` },
-          { name: "description", content: loaderData.excerpt ?? loaderData.title },
-          { property: "og:title", content: loaderData.title },
-          { property: "og:description", content: loaderData.excerpt ?? "" },
-          ...(loaderData.cover_image_url ? [{ property: "og:image", content: loaderData.cover_image_url }] : []),
+          { title: `${loaderData.post.title} — Jessica Salgado` },
+          { name: "description", content: loaderData.post.excerpt ?? loaderData.post.title },
+          { property: "og:title", content: loaderData.post.title },
+          { property: "og:description", content: loaderData.post.excerpt ?? "" },
+          ...(loaderData.post.cover_image_url ? [{ property: "og:image", content: loaderData.post.cover_image_url }] : []),
         ]
       : [],
   }),
@@ -30,7 +33,8 @@ export const Route = createFileRoute("/blog/$slug")({
 });
 
 function PostPage() {
-  const p = Route.useLoaderData();
+  const { post: p, categories } = Route.useLoaderData();
+  const label = categories.find((c: any) => c.slug === p.category)?.label ?? p.category;
   return (
     <div style={{ fontFamily: "Inter, sans-serif", background: "#f7f8fc", minHeight: "100vh" }}>
       <header style={{ background: "white", boxShadow: "0 1px 3px rgba(0,0,0,0.04)" }}>
@@ -41,7 +45,7 @@ function PostPage() {
       </header>
       <article style={{ maxWidth: 760, margin: "0 auto", padding: "40px 24px" }}>
         <Link to="/blog/" search={{ category: p.category }} style={{ color: "#3b82f6", fontSize: 13, fontWeight: 600, textDecoration: "none", textTransform: "uppercase", letterSpacing: 0.5 }}>
-          {CATEGORY_LABEL[p.category] ?? p.category}
+          {label}
         </Link>
         <h1 style={{ margin: "8px 0 12px", fontSize: 36, color: "#0f172a", lineHeight: 1.2 }}>{p.title}</h1>
         {p.published_at && (

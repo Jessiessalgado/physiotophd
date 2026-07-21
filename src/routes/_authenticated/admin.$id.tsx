@@ -2,7 +2,8 @@ import { createFileRoute, Link, useNavigate, useParams } from "@tanstack/react-r
 import { useEffect, useState } from "react";
 import { useServerFn } from "@tanstack/react-start";
 import { getPostAdmin, upsertPost, uploadCoverImage } from "@/lib/posts.functions";
-import { CATEGORIES } from "@/lib/categories";
+import { listCategories } from "@/lib/categories.functions";
+import { RichTextEditor } from "@/components/RichTextEditor";
 
 export const Route = createFileRoute("/_authenticated/admin/$id")({
   component: Editor,
@@ -21,15 +22,24 @@ function Editor() {
   const load = useServerFn(getPostAdmin);
   const save = useServerFn(upsertPost);
   const upload = useServerFn(uploadCoverImage);
+  const loadCats = useServerFn(listCategories);
 
+  const [cats, setCats] = useState<{ slug: string; label: string }[]>([]);
   const [form, setForm] = useState({
     id: undefined as string | undefined,
     title: "", slug: "", excerpt: "", content: "",
-    cover_image_url: "", category: CATEGORIES[0].slug as string, published: false,
+    cover_image_url: "", category: "", published: false,
   });
   const [busy, setBusy] = useState(false);
   const [err, setErr] = useState<string | null>(null);
   const [uploading, setUploading] = useState(false);
+
+  useEffect(() => {
+    loadCats().then((rows) => {
+      setCats(rows as any);
+      setForm((f) => f.category ? f : { ...f, category: rows[0]?.slug ?? "" });
+    }).catch((e) => setErr(e.message));
+  }, []);
 
   useEffect(() => {
     if (isNew) return;
@@ -47,16 +57,31 @@ function Editor() {
     setForm((f) => ({ ...f, [k]: v }));
   }
 
+  async function fileToBase64(f: File) {
+    const buf = await f.arrayBuffer();
+    let s = ""; const bytes = new Uint8Array(buf);
+    const CHUNK = 0x8000;
+    for (let i = 0; i < bytes.length; i += CHUNK) {
+      s += String.fromCharCode(...bytes.subarray(i, i + CHUNK));
+    }
+    return btoa(s);
+  }
+
   async function onFile(e: React.ChangeEvent<HTMLInputElement>) {
     const f = e.target.files?.[0]; if (!f) return;
     setUploading(true); setErr(null);
     try {
-      const buf = await f.arrayBuffer();
-      const b64 = btoa(String.fromCharCode(...new Uint8Array(buf)));
+      const b64 = await fileToBase64(f);
       const { url } = await upload({ data: { filename: f.name, contentType: f.type, base64: b64 } });
       set("cover_image_url", url);
     } catch (e: any) { setErr(e.message); }
     finally { setUploading(false); }
+  }
+
+  async function uploadInlineImage(f: File): Promise<string> {
+    const b64 = await fileToBase64(f);
+    const { url } = await upload({ data: { filename: f.name, contentType: f.type, base64: b64 } });
+    return url;
   }
 
   async function submit(e: React.FormEvent) {
@@ -64,6 +89,7 @@ function Editor() {
     setErr(null); setBusy(true);
     try {
       const slug = form.slug || slugify(form.title);
+      if (!form.category) throw new Error("Choose a category");
       await save({ data: { ...form, slug } });
       navigate({ to: "/admin" });
     } catch (e: any) { setErr(e.message); }
@@ -71,7 +97,7 @@ function Editor() {
   }
 
   return (
-    <div style={{ maxWidth: 800, margin: "0 auto", padding: 32, fontFamily: "Inter, sans-serif" }}>
+    <div style={{ maxWidth: 860, margin: "0 auto", padding: 32, fontFamily: "Inter, sans-serif" }}>
       <Link to="/admin" style={{ color: "#64748b", fontSize: 14, textDecoration: "none" }}>← Back</Link>
       <h1 style={{ color: "#1e3a8a", marginTop: 8 }}>{isNew ? "New post" : "Edit post"}</h1>
 
@@ -84,8 +110,12 @@ function Editor() {
         </Field>
         <Field label="Category (menu section)">
           <select value={form.category} onChange={(e) => set("category", e.target.value)} style={inp}>
-            {CATEGORIES.map((c) => <option key={c.slug} value={c.slug}>{c.label}</option>)}
+            {cats.length === 0 && <option value="">Loading…</option>}
+            {cats.map((c) => <option key={c.slug} value={c.slug}>{c.label}</option>)}
           </select>
+          <div style={{ fontSize: 12, color: "#64748b", marginTop: 4 }}>
+            Manage categories on the <Link to="/admin" style={{ color: "#1e3a8a" }}>Admin</Link> page (Categories tab).
+          </div>
         </Field>
         <Field label="Excerpt (short summary shown on the blog list)">
           <textarea rows={2} value={form.excerpt} onChange={(e) => set("excerpt", e.target.value)} style={{ ...inp, resize: "vertical" }} />
@@ -96,9 +126,11 @@ function Editor() {
           {form.cover_image_url && <img src={form.cover_image_url} alt="" style={{ marginTop: 8, maxWidth: 240, borderRadius: 8 }} />}
           <input placeholder="…or paste an image URL" value={form.cover_image_url} onChange={(e) => set("cover_image_url", e.target.value)} style={{ ...inp, marginTop: 8 }} />
         </Field>
-        <Field label="Content (HTML or Markdown)">
-          <textarea rows={16} value={form.content} onChange={(e) => set("content", e.target.value)} style={{ ...inp, resize: "vertical", fontFamily: "ui-monospace, Menlo, monospace", fontSize: 13 }} />
-          <div style={{ fontSize: 12, color: "#64748b", marginTop: 4 }}>Tip: you can write HTML tags like &lt;h2&gt;, &lt;p&gt;, &lt;strong&gt;, &lt;a href="…"&gt;, &lt;img src="…" /&gt;.</div>
+        <Field label="Content">
+          <RichTextEditor value={form.content} onChange={(v) => set("content", v)} onUploadImage={uploadInlineImage} />
+          <div style={{ fontSize: 12, color: "#64748b", marginTop: 4 }}>
+            Use the toolbar for formatting. Toggle <b>HTML</b> to paste raw markup.
+          </div>
         </Field>
         <label style={{ display: "flex", gap: 8, alignItems: "center" }}>
           <input type="checkbox" checked={form.published} onChange={(e) => set("published", e.target.checked)} />

@@ -1,13 +1,19 @@
 import { createFileRoute, Link, useSearch } from "@tanstack/react-router";
 import { listPublishedPosts } from "@/lib/posts.functions";
-import { CATEGORIES, CATEGORY_LABEL } from "@/lib/categories";
+import { listCategories } from "@/lib/categories.functions";
 
 export const Route = createFileRoute("/blog/")({
   validateSearch: (s: Record<string, unknown>) => ({
     category: typeof s.category === "string" ? s.category : undefined,
   }),
   loaderDeps: ({ search }) => ({ category: search.category }),
-  loader: ({ deps }) => listPublishedPosts({ data: { category: deps.category } }),
+  loader: async ({ deps }) => {
+    const [posts, categories] = await Promise.all([
+      listPublishedPosts({ data: { category: deps.category } }),
+      listCategories(),
+    ]);
+    return { posts, categories };
+  },
   component: BlogList,
   head: ({ loaderData }) => ({
     meta: [
@@ -24,8 +30,9 @@ export const Route = createFileRoute("/blog/")({
 const pad: React.CSSProperties = { padding: 32, fontFamily: "Inter, sans-serif" };
 
 function BlogList() {
-  const posts = Route.useLoaderData();
+  const { posts, categories } = Route.useLoaderData();
   const { category } = useSearch({ from: "/blog/" });
+  const label = (slug: string) => categories.find((c: any) => c.slug === slug)?.label ?? slug;
 
   return (
     <div style={{ fontFamily: "Inter, sans-serif", minHeight: "100vh", background: "#f7f8fc" }}>
@@ -35,11 +42,11 @@ function BlogList() {
           <span style={{ display: "inline-block", width: 6, height: 28, background: "#3b82f6", borderRadius: 3 }} />
           <h1 style={{ margin: 0, fontSize: 32, color: "#0f172a" }}>Blog</h1>
         </div>
-        <p style={{ color: "#64748b", marginTop: 8 }}>{category ? CATEGORY_LABEL[category] ?? category : "All research areas"}</p>
+        <p style={{ color: "#64748b", marginTop: 8 }}>{category ? label(category) : "All research areas"}</p>
 
         <nav style={{ display: "flex", flexWrap: "wrap", gap: 8, margin: "20px 0 32px" }}>
           <Link to="/blog/" search={{ category: undefined }} style={chip(!category)}>All</Link>
-          {CATEGORIES.map((c) => (
+          {categories.map((c: any) => (
             <Link key={c.slug} to="/blog/" search={{ category: c.slug }} style={chip(category === c.slug)}>
               {c.label}
             </Link>
@@ -54,7 +61,7 @@ function BlogList() {
               <Link key={p.id} to="/blog/$slug" params={{ slug: p.slug }} style={cardLink}>
                 {p.cover_image_url && <img src={p.cover_image_url} alt="" style={{ width: "100%", aspectRatio: "16/10", objectFit: "cover" }} />}
                 <div style={{ padding: 16 }}>
-                  <div style={{ fontSize: 12, color: "#3b82f6", fontWeight: 600, textTransform: "uppercase", letterSpacing: 0.5 }}>{CATEGORY_LABEL[p.category] ?? p.category}</div>
+                  <div style={{ fontSize: 12, color: "#3b82f6", fontWeight: 600, textTransform: "uppercase", letterSpacing: 0.5 }}>{label(p.category)}</div>
                   <h3 style={{ margin: "6px 0 8px", fontSize: 18, color: "#0f172a" }}>{p.title}</h3>
                   {p.excerpt && <p style={{ margin: 0, color: "#64748b", fontSize: 14, lineHeight: 1.5 }}>{p.excerpt}</p>}
                 </div>
