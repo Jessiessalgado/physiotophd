@@ -28,13 +28,19 @@ function publicClient() {
   });
 }
 
-async function requireAdmin(ctx: { supabase: any; userId: string }) {
-  const { data, error } = await ctx.supabase.rpc("has_role", {
-    _user_id: ctx.userId,
-    _role: "admin",
-  });
+async function isAdmin(ctx: { supabase: any; userId: string }) {
+  const { data, error } = await ctx.supabase
+    .from("user_roles")
+    .select("role")
+    .eq("user_id", ctx.userId)
+    .eq("role", "admin")
+    .maybeSingle();
   if (error) throw new Error(error.message);
-  if (!data) throw new Error("Forbidden");
+  return Boolean(data);
+}
+
+async function requireAdmin(ctx: { supabase: any; userId: string }) {
+  if (!(await isAdmin(ctx))) throw new Error("Forbidden");
 }
 
 // ---------- Public reads ----------
