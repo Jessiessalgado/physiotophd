@@ -29,6 +29,7 @@ function Editor() {
     id: undefined as string | undefined,
     title: "", slug: "", excerpt: "", content: "",
     cover_image_url: "", category: "", published: false,
+    published_at: "" as string, // datetime-local value ("" = not set)
   });
   const [busy, setBusy] = useState(false);
   const [err, setErr] = useState<string | null>(null);
@@ -49,6 +50,7 @@ function Editor() {
         excerpt: row.excerpt ?? "", content: row.content ?? "",
         cover_image_url: row.cover_image_url ?? "",
         category: row.category, published: row.published,
+        published_at: row.published_at ? toLocalInput(row.published_at) : "",
       });
     }).catch((e) => setErr(e.message));
   }, [id]);
