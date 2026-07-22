@@ -48,10 +48,13 @@ export const listPublishedPosts = createServerFn({ method: "GET" })
   .inputValidator((d: { category?: string } | undefined) => d ?? {})
   .handler(async ({ data }) => {
     const sb = publicClient();
+    const now = new Date().toISOString();
     let q = sb
       .from("posts")
       .select("id,title,slug,excerpt,cover_image_url,category,published_at")
       .eq("published", true)
+      .not("published_at", "is", null)
+      .lte("published_at", now)
       .order("published_at", { ascending: false });
     if (data.category) q = q.eq("category", data.category);
     const { data: rows, error } = await q;
@@ -63,11 +66,14 @@ export const getPostBySlug = createServerFn({ method: "GET" })
   .inputValidator((d: { slug: string }) => d)
   .handler(async ({ data }) => {
     const sb = publicClient();
+    const now = new Date().toISOString();
     const { data: row, error } = await sb
       .from("posts")
       .select("id,title,slug,excerpt,content,cover_image_url,category,published_at")
       .eq("slug", data.slug)
       .eq("published", true)
+      .not("published_at", "is", null)
+      .lte("published_at", now)
       .maybeSingle();
     if (error) throw new Error(error.message);
     return row;
@@ -137,10 +143,19 @@ export const upsertPost = createServerFn({ method: "POST" })
       cover_image_url?: string;
       category: string;
       published: boolean;
+      published_at?: string | null;
     }) => d,
   )
   .handler(async ({ data, context }) => {
     await requireAdmin(context);
+    // Scheduling: if a published_at is provided, use it (can be future = scheduled).
+    // Otherwise, when publishing without a date, default to now.
+    let publishedAt: string | null = null;
+    if (data.published) {
+      publishedAt = data.published_at ? new Date(data.published_at).toISOString() : new Date().toISOString();
+    } else {
+      publishedAt = data.published_at ? new Date(data.published_at).toISOString() : null;
+    }
     const payload = {
       title: data.title,
       slug: data.slug,
@@ -149,7 +164,7 @@ export const upsertPost = createServerFn({ method: "POST" })
       cover_image_url: data.cover_image_url ?? null,
       category: data.category,
       published: data.published,
-      published_at: data.published ? new Date().toISOString() : null,
+      published_at: publishedAt,
     };
     if (data.id) {
       const { data: row, error } = await context.supabase

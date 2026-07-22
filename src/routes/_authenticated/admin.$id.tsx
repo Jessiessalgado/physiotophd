@@ -15,6 +15,13 @@ function slugify(s: string) {
     .replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "").slice(0, 80);
 }
 
+// Convert ISO timestamp -> "YYYY-MM-DDTHH:mm" for <input type=datetime-local>
+function toLocalInput(iso: string) {
+  const d = new Date(iso);
+  const pad = (n: number) => String(n).padStart(2, "0");
+  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
+}
+
 function Editor() {
   const { id } = useParams({ from: "/_authenticated/admin/$id" });
   const isNew = id === "new";
@@ -29,6 +36,7 @@ function Editor() {
     id: undefined as string | undefined,
     title: "", slug: "", excerpt: "", content: "",
     cover_image_url: "", category: "", published: false,
+    published_at: "" as string, // datetime-local value ("" = not set)
   });
   const [busy, setBusy] = useState(false);
   const [err, setErr] = useState<string | null>(null);
@@ -49,6 +57,7 @@ function Editor() {
         excerpt: row.excerpt ?? "", content: row.content ?? "",
         cover_image_url: row.cover_image_url ?? "",
         category: row.category, published: row.published,
+        published_at: row.published_at ? toLocalInput(row.published_at) : "",
       });
     }).catch((e) => setErr(e.message));
   }, [id]);
@@ -90,11 +99,14 @@ function Editor() {
     try {
       const slug = form.slug || slugify(form.title);
       if (!form.category) throw new Error("Choose a category");
-      await save({ data: { ...form, slug } });
+      const published_at = form.published_at ? new Date(form.published_at).toISOString() : null;
+      await save({ data: { ...form, slug, published_at } });
       navigate({ to: "/admin" });
     } catch (e: any) { setErr(e.message); }
     finally { setBusy(false); }
   }
+
+  const scheduled = form.published && !!form.published_at && new Date(form.published_at).getTime() > Date.now();
 
   return (
     <div style={{ maxWidth: 860, margin: "0 auto", padding: 32, fontFamily: "Inter, sans-serif" }}>
@@ -132,10 +144,37 @@ function Editor() {
             Use the toolbar for formatting. Toggle <b>HTML</b> to paste raw markup.
           </div>
         </Field>
-        <label style={{ display: "flex", gap: 8, alignItems: "center" }}>
-          <input type="checkbox" checked={form.published} onChange={(e) => set("published", e.target.checked)} />
-          <span>Published (visible on the site)</span>
-        </label>
+        <Field label="Publish schedule">
+          <label style={{ display: "flex", gap: 8, alignItems: "center", marginBottom: 10 }}>
+            <input type="checkbox" checked={form.published} onChange={(e) => set("published", e.target.checked)} />
+            <span>Published (mark as ready to go live)</span>
+          </label>
+          <div style={{ display: "flex", gap: 8, alignItems: "center", flexWrap: "wrap" }}>
+            <input
+              type="datetime-local"
+              value={form.published_at}
+              onChange={(e) => set("published_at", e.target.value)}
+              style={{ ...inp, width: "auto" }}
+            />
+            {form.published_at && (
+              <button type="button" onClick={() => set("published_at", "")} style={{ padding: "8px 12px", background: "#f1f5f9", color: "#0f172a", border: 0, borderRadius: 8, cursor: "pointer", fontSize: 13 }}>
+                Clear date
+              </button>
+            )}
+            <button type="button" onClick={() => set("published_at", toLocalInput(new Date().toISOString()))} style={{ padding: "8px 12px", background: "#f1f5f9", color: "#0f172a", border: 0, borderRadius: 8, cursor: "pointer", fontSize: 13 }}>
+              Now
+            </button>
+          </div>
+          <div style={{ fontSize: 12, color: "#64748b", marginTop: 8 }}>
+            {!form.published
+              ? "Draft — not visible on the site."
+              : scheduled
+              ? `⏱ Scheduled — will appear on /blog and the Blogger XML on ${new Date(form.published_at).toLocaleString()}.`
+              : form.published_at
+              ? `✓ Live since ${new Date(form.published_at).toLocaleString()}.`
+              : "Will publish immediately (date defaults to now on save)."}
+          </div>
+        </Field>
         {err && <div style={{ color: "#dc2626" }}>{err}</div>}
         <div style={{ display: "flex", gap: 8 }}>
           <button disabled={busy} type="submit" style={{ padding: "12px 20px", background: "#1e3a8a", color: "white", border: 0, borderRadius: 8, fontSize: 15, fontWeight: 600, cursor: "pointer" }}>

@@ -84,18 +84,26 @@ function PostsTab({ posts, cats, onDelete }: { posts: any[] | null; cats: Catego
         <p style={{ color: "#64748b" }}>No posts yet. Create your first one.</p>
       ) : (
         <div style={{ display: "grid", gap: 12 }}>
-          {posts.map((p) => (
-            <div key={p.id} style={card}>
-              <div style={{ flex: 1 }}>
-                <div style={{ fontWeight: 600, color: "#0f172a" }}>{p.title}</div>
-                <div style={{ fontSize: 13, color: "#64748b", marginTop: 4 }}>
-                  {label(p.category)} · {p.published ? <span style={{ color: "#059669" }}>Published</span> : <span style={{ color: "#d97706" }}>Draft</span>} · /{p.slug}
+          {posts.map((p) => {
+            const scheduled = p.published && p.published_at && new Date(p.published_at).getTime() > Date.now();
+            const status = !p.published
+              ? <span style={{ color: "#d97706" }}>Draft</span>
+              : scheduled
+              ? <span style={{ color: "#7c3aed" }}>⏱ Scheduled · {new Date(p.published_at).toLocaleString()}</span>
+              : <span style={{ color: "#059669" }}>Published</span>;
+            return (
+              <div key={p.id} style={card}>
+                <div style={{ flex: 1 }}>
+                  <div style={{ fontWeight: 600, color: "#0f172a" }}>{p.title}</div>
+                  <div style={{ fontSize: 13, color: "#64748b", marginTop: 4 }}>
+                    {label(p.category)} · {status} · /{p.slug}
+                  </div>
                 </div>
+                <Link to="/admin/$id" params={{ id: p.id }} style={btnGhost}>Edit</Link>
+                <button onClick={() => onDelete(p.id)} style={btnDanger}>Delete</button>
               </div>
-              <Link to="/admin/$id" params={{ id: p.id }} style={btnGhost}>Edit</Link>
-              <button onClick={() => onDelete(p.id)} style={btnDanger}>Delete</button>
-            </div>
-          ))}
+            );
+          })}
         </div>
       )}
     </div>
