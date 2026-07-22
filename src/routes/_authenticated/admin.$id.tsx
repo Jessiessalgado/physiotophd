@@ -137,10 +137,37 @@ function Editor() {
             Use the toolbar for formatting. Toggle <b>HTML</b> to paste raw markup.
           </div>
         </Field>
-        <label style={{ display: "flex", gap: 8, alignItems: "center" }}>
-          <input type="checkbox" checked={form.published} onChange={(e) => set("published", e.target.checked)} />
-          <span>Published (visible on the site)</span>
-        </label>
+        <Field label="Publish schedule">
+          <label style={{ display: "flex", gap: 8, alignItems: "center", marginBottom: 10 }}>
+            <input type="checkbox" checked={form.published} onChange={(e) => set("published", e.target.checked)} />
+            <span>Published (mark as ready to go live)</span>
+          </label>
+          <div style={{ display: "flex", gap: 8, alignItems: "center", flexWrap: "wrap" }}>
+            <input
+              type="datetime-local"
+              value={form.published_at}
+              onChange={(e) => set("published_at", e.target.value)}
+              style={{ ...inp, width: "auto" }}
+            />
+            {form.published_at && (
+              <button type="button" onClick={() => set("published_at", "")} style={{ padding: "8px 12px", background: "#f1f5f9", color: "#0f172a", border: 0, borderRadius: 8, cursor: "pointer", fontSize: 13 }}>
+                Clear date
+              </button>
+            )}
+            <button type="button" onClick={() => set("published_at", toLocalInput(new Date().toISOString()))} style={{ padding: "8px 12px", background: "#f1f5f9", color: "#0f172a", border: 0, borderRadius: 8, cursor: "pointer", fontSize: 13 }}>
+              Now
+            </button>
+          </div>
+          <div style={{ fontSize: 12, color: "#64748b", marginTop: 8 }}>
+            {!form.published
+              ? "Draft — not visible on the site."
+              : scheduled
+              ? `⏱ Scheduled — will appear on /blog and the Blogger XML on ${new Date(form.published_at).toLocaleString()}.`
+              : form.published_at
+              ? `✓ Live since ${new Date(form.published_at).toLocaleString()}.`
+              : "Will publish immediately (date defaults to now on save)."}
+          </div>
+        </Field>
         {err && <div style={{ color: "#dc2626" }}>{err}</div>}
         <div style={{ display: "flex", gap: 8 }}>
           <button disabled={busy} type="submit" style={{ padding: "12px 20px", background: "#1e3a8a", color: "white", border: 0, borderRadius: 8, fontSize: 15, fontWeight: 600, cursor: "pointer" }}>
