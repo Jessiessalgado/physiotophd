@@ -92,11 +92,14 @@ function Editor() {
     try {
       const slug = form.slug || slugify(form.title);
       if (!form.category) throw new Error("Choose a category");
-      await save({ data: { ...form, slug } });
+      const published_at = form.published_at ? new Date(form.published_at).toISOString() : null;
+      await save({ data: { ...form, slug, published_at } });
       navigate({ to: "/admin" });
     } catch (e: any) { setErr(e.message); }
     finally { setBusy(false); }
   }
+
+  const scheduled = form.published && !!form.published_at && new Date(form.published_at).getTime() > Date.now();
 
   return (
     <div style={{ maxWidth: 860, margin: "0 auto", padding: 32, fontFamily: "Inter, sans-serif" }}>
