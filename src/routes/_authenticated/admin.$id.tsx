@@ -15,6 +15,13 @@ function slugify(s: string) {
     .replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "").slice(0, 80);
 }
 
+// Convert ISO timestamp -> "YYYY-MM-DDTHH:mm" for <input type=datetime-local>
+function toLocalInput(iso: string) {
+  const d = new Date(iso);
+  const pad = (n: number) => String(n).padStart(2, "0");
+  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
+}
+
 function Editor() {
   const { id } = useParams({ from: "/_authenticated/admin/$id" });
   const isNew = id === "new";
