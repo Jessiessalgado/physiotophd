@@ -143,10 +143,19 @@ export const upsertPost = createServerFn({ method: "POST" })
       cover_image_url?: string;
       category: string;
       published: boolean;
+      published_at?: string | null;
     }) => d,
   )
   .handler(async ({ data, context }) => {
     await requireAdmin(context);
+    // Scheduling: if a published_at is provided, use it (can be future = scheduled).
+    // Otherwise, when publishing without a date, default to now.
+    let publishedAt: string | null = null;
+    if (data.published) {
+      publishedAt = data.published_at ? new Date(data.published_at).toISOString() : new Date().toISOString();
+    } else {
+      publishedAt = data.published_at ? new Date(data.published_at).toISOString() : null;
+    }
     const payload = {
       title: data.title,
       slug: data.slug,
@@ -155,7 +164,7 @@ export const upsertPost = createServerFn({ method: "POST" })
       cover_image_url: data.cover_image_url ?? null,
       category: data.category,
       published: data.published,
-      published_at: data.published ? new Date().toISOString() : null,
+      published_at: publishedAt,
     };
     if (data.id) {
       const { data: row, error } = await context.supabase
