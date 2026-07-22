@@ -48,10 +48,13 @@ export const listPublishedPosts = createServerFn({ method: "GET" })
   .inputValidator((d: { category?: string } | undefined) => d ?? {})
   .handler(async ({ data }) => {
     const sb = publicClient();
+    const now = new Date().toISOString();
     let q = sb
       .from("posts")
       .select("id,title,slug,excerpt,cover_image_url,category,published_at")
       .eq("published", true)
+      .not("published_at", "is", null)
+      .lte("published_at", now)
       .order("published_at", { ascending: false });
     if (data.category) q = q.eq("category", data.category);
     const { data: rows, error } = await q;
@@ -63,11 +66,14 @@ export const getPostBySlug = createServerFn({ method: "GET" })
   .inputValidator((d: { slug: string }) => d)
   .handler(async ({ data }) => {
     const sb = publicClient();
+    const now = new Date().toISOString();
     const { data: row, error } = await sb
       .from("posts")
       .select("id,title,slug,excerpt,content,cover_image_url,category,published_at")
       .eq("slug", data.slug)
       .eq("published", true)
+      .not("published_at", "is", null)
+      .lte("published_at", now)
       .maybeSingle();
     if (error) throw new Error(error.message);
     return row;
