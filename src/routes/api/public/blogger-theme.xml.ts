@@ -37,11 +37,14 @@ export const Route = createFileRoute("/api/public/blogger-theme/xml")({
           auth: { storage: undefined, persistSession: false, autoRefreshToken: false },
           global: { fetch: fetchShim(key) },
         });
+        const nowIso = new Date().toISOString();
         const [{ data: cats }, { data: posts }] = await Promise.all([
           sb.from("categories").select("slug,label,sort_order").order("sort_order"),
           sb.from("posts")
             .select("title,slug,excerpt,content,cover_image_url,category,published_at")
             .eq("published", true)
+            .not("published_at", "is", null)
+            .lte("published_at", nowIso)
             .order("published_at", { ascending: false }),
         ]);
 
