@@ -111,7 +111,7 @@ export const listAllPostsAdmin = createServerFn({ method: "GET" })
     await requireAdmin(context);
     const { data, error } = await context.supabase
       .from("posts")
-      .select("id,title,slug,category,published,published_at,updated_at")
+      .select("id,title,slug,category,published,published_at,updated_at,featured,reading_time,seo_score,meta_description,cover_image_url")
       .order("updated_at", { ascending: false });
     if (error) throw new Error(error.message);
     return data ?? [];
@@ -128,7 +128,11 @@ export const getPostAdmin = createServerFn({ method: "GET" })
       .eq("id", data.id)
       .maybeSingle();
     if (error) throw new Error(error.message);
-    return row;
+    const { data: tags } = await context.supabase
+      .from("post_tags")
+      .select("tag_slug")
+      .eq("post_id", data.id);
+    return { ...(row ?? {}), tags: (tags ?? []).map((t: any) => t.tag_slug) } as any;
   });
 
 export const upsertPost = createServerFn({ method: "POST" })
@@ -144,19 +148,25 @@ export const upsertPost = createServerFn({ method: "POST" })
       category: string;
       published: boolean;
       published_at?: string | null;
+      meta_description?: string;
+      author_id?: string | null;
+      featured?: boolean;
+      reading_time?: number | null;
+      seo_score?: number | null;
+      doi?: string;
+      references_text?: string;
+      tags?: string[];
     }) => d,
   )
   .handler(async ({ data, context }) => {
     await requireAdmin(context);
-    // Scheduling: if a published_at is provided, use it (can be future = scheduled).
-    // Otherwise, when publishing without a date, default to now.
     let publishedAt: string | null = null;
     if (data.published) {
       publishedAt = data.published_at ? new Date(data.published_at).toISOString() : new Date().toISOString();
     } else {
       publishedAt = data.published_at ? new Date(data.published_at).toISOString() : null;
     }
-    const payload = {
+    const payload: any = {
       title: data.title,
       slug: data.slug,
       excerpt: data.excerpt ?? null,
@@ -165,25 +175,34 @@ export const upsertPost = createServerFn({ method: "POST" })
       category: data.category,
       published: data.published,
       published_at: publishedAt,
+      meta_description: data.meta_description ?? null,
+      author_id: data.author_id || null,
+      featured: data.featured ?? false,
+      reading_time: data.reading_time ?? null,
+      seo_score: data.seo_score ?? null,
+      doi: data.doi ?? null,
+      references_text: data.references_text ?? null,
     };
+    let row: any;
     if (data.id) {
-      const { data: row, error } = await context.supabase
-        .from("posts")
-        .update(payload)
-        .eq("id", data.id)
-        .select()
-        .single();
-      if (error) throw new Error(error.message);
-      return row;
+      const res = await context.supabase.from("posts").update(payload).eq("id", data.id).select().single();
+      if (res.error) throw new Error(res.error.message);
+      row = res.data;
     } else {
-      const { data: row, error } = await context.supabase
-        .from("posts")
-        .insert(payload)
-        .select()
-        .single();
-      if (error) throw new Error(error.message);
-      return row;
+      const res = await context.supabase.from("posts").insert(payload).select().single();
+      if (res.error) throw new Error(res.error.message);
+      row = res.data;
     }
+    if (data.tags) {
+      await context.supabase.from("post_tags").delete().eq("post_id", row.id);
+      if (data.tags.length) {
+        const { error } = await context.supabase
+          .from("post_tags")
+          .insert(data.tags.map((t) => ({ post_id: row.id, tag_slug: t })));
+        if (error) throw new Error(error.message);
+      }
+    }
+    return row;
   });
 
 export const deletePost = createServerFn({ method: "POST" })
