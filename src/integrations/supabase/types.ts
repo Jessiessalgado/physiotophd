@@ -14,6 +14,48 @@ export type Database = {
   }
   public: {
     Tables: {
+      authors: {
+        Row: {
+          avatar_url: string | null
+          bio: string | null
+          created_at: string
+          email: string | null
+          id: string
+          name: string
+          role_title: string | null
+          slug: string
+          socials: Json
+          updated_at: string
+          website: string | null
+        }
+        Insert: {
+          avatar_url?: string | null
+          bio?: string | null
+          created_at?: string
+          email?: string | null
+          id?: string
+          name: string
+          role_title?: string | null
+          slug: string
+          socials?: Json
+          updated_at?: string
+          website?: string | null
+        }
+        Update: {
+          avatar_url?: string | null
+          bio?: string | null
+          created_at?: string
+          email?: string | null
+          id?: string
+          name?: string
+          role_title?: string | null
+          slug?: string
+          socials?: Json
+          updated_at?: string
+          website?: string | null
+        }
+        Relationships: []
+      }
       categories: {
         Row: {
           created_at: string
@@ -38,44 +80,329 @@ export type Database = {
         }
         Relationships: []
       }
+      comments: {
+        Row: {
+          admin_reply: string | null
+          author_email: string | null
+          author_name: string
+          content: string
+          created_at: string
+          id: string
+          post_id: string
+          replied_at: string | null
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          admin_reply?: string | null
+          author_email?: string | null
+          author_name: string
+          content: string
+          created_at?: string
+          id?: string
+          post_id: string
+          replied_at?: string | null
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          admin_reply?: string | null
+          author_email?: string | null
+          author_name?: string
+          content?: string
+          created_at?: string
+          id?: string
+          post_id?: string
+          replied_at?: string | null
+          status?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "comments_post_id_fkey"
+            columns: ["post_id"]
+            isOneToOne: false
+            referencedRelation: "posts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      media: {
+        Row: {
+          alt_text: string | null
+          content_type: string | null
+          created_at: string
+          filename: string
+          id: string
+          path: string
+          size_bytes: number | null
+          updated_at: string
+          url: string
+        }
+        Insert: {
+          alt_text?: string | null
+          content_type?: string | null
+          created_at?: string
+          filename: string
+          id?: string
+          path: string
+          size_bytes?: number | null
+          updated_at?: string
+          url: string
+        }
+        Update: {
+          alt_text?: string | null
+          content_type?: string | null
+          created_at?: string
+          filename?: string
+          id?: string
+          path?: string
+          size_bytes?: number | null
+          updated_at?: string
+          url?: string
+        }
+        Relationships: []
+      }
+      newsletter_subscribers: {
+        Row: {
+          created_at: string
+          email: string
+          id: string
+          name: string | null
+          source: string | null
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          email: string
+          id?: string
+          name?: string | null
+          source?: string | null
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          email?: string
+          id?: string
+          name?: string | null
+          source?: string | null
+          status?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      pages: {
+        Row: {
+          content: string
+          created_at: string
+          excerpt: string | null
+          id: string
+          meta_description: string | null
+          published: boolean
+          slug: string
+          sort_order: number
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          content?: string
+          created_at?: string
+          excerpt?: string | null
+          id?: string
+          meta_description?: string | null
+          published?: boolean
+          slug: string
+          sort_order?: number
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          content?: string
+          created_at?: string
+          excerpt?: string | null
+          id?: string
+          meta_description?: string | null
+          published?: boolean
+          slug?: string
+          sort_order?: number
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      post_tags: {
+        Row: {
+          post_id: string
+          tag_slug: string
+        }
+        Insert: {
+          post_id: string
+          tag_slug: string
+        }
+        Update: {
+          post_id?: string
+          tag_slug?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "post_tags_post_id_fkey"
+            columns: ["post_id"]
+            isOneToOne: false
+            referencedRelation: "posts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "post_tags_tag_slug_fkey"
+            columns: ["tag_slug"]
+            isOneToOne: false
+            referencedRelation: "tags"
+            referencedColumns: ["slug"]
+          },
+        ]
+      }
+      post_views: {
+        Row: {
+          post_id: string
+          updated_at: string
+          views: number
+        }
+        Insert: {
+          post_id: string
+          updated_at?: string
+          views?: number
+        }
+        Update: {
+          post_id?: string
+          updated_at?: string
+          views?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "post_views_post_id_fkey"
+            columns: ["post_id"]
+            isOneToOne: true
+            referencedRelation: "posts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       posts: {
         Row: {
+          author_id: string | null
           category: string
           content: string
           cover_image_url: string | null
           created_at: string
+          doi: string | null
           excerpt: string | null
+          featured: boolean
           id: string
+          meta_description: string | null
           published: boolean
           published_at: string | null
+          reading_time: number | null
+          references_text: string | null
+          seo_score: number | null
           slug: string
           title: string
           updated_at: string
         }
         Insert: {
+          author_id?: string | null
           category: string
           content?: string
           cover_image_url?: string | null
           created_at?: string
+          doi?: string | null
           excerpt?: string | null
+          featured?: boolean
           id?: string
+          meta_description?: string | null
           published?: boolean
           published_at?: string | null
+          reading_time?: number | null
+          references_text?: string | null
+          seo_score?: number | null
           slug: string
           title: string
           updated_at?: string
         }
         Update: {
+          author_id?: string | null
           category?: string
           content?: string
           cover_image_url?: string | null
           created_at?: string
+          doi?: string | null
           excerpt?: string | null
+          featured?: boolean
           id?: string
+          meta_description?: string | null
           published?: boolean
           published_at?: string | null
+          reading_time?: number | null
+          references_text?: string | null
+          seo_score?: number | null
           slug?: string
           title?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "posts_author_id_fkey"
+            columns: ["author_id"]
+            isOneToOne: false
+            referencedRelation: "authors"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      settings: {
+        Row: {
+          created_at: string
+          is_public: boolean
+          key: string
+          updated_at: string
+          value: Json
+        }
+        Insert: {
+          created_at?: string
+          is_public?: boolean
+          key: string
+          updated_at?: string
+          value?: Json
+        }
+        Update: {
+          created_at?: string
+          is_public?: boolean
+          key?: string
+          updated_at?: string
+          value?: Json
+        }
+        Relationships: []
+      }
+      tags: {
+        Row: {
+          created_at: string
+          description: string | null
+          label: string
+          slug: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          label: string
+          slug: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          label?: string
+          slug?: string
           updated_at?: string
         }
         Relationships: []
@@ -113,6 +440,7 @@ export type Database = {
         }
         Returns: boolean
       }
+      increment_post_view: { Args: { _post_id: string }; Returns: undefined }
     }
     Enums: {
       app_role: "admin" | "user"
