@@ -16,6 +16,7 @@ import { Route as BlogIndexRouteImport } from './routes/blog.index'
 import { Route as BlogSlugRouteImport } from './routes/blog.$slug'
 import { Route as AuthenticatedAdminRouteRouteImport } from './routes/_authenticated/admin/route'
 import { Route as AuthenticatedAdminIndexRouteImport } from './routes/_authenticated/admin/index'
+import { Route as AuthenticatedAdminCategoriesRouteImport } from './routes/_authenticated/admin/categories'
 import { Route as AuthenticatedAdminPostsIndexRouteImport } from './routes/_authenticated/admin/posts.index'
 import { Route as ApiPublicPostImageSplatRouteImport } from './routes/api/public/post-image.$'
 import { Route as ApiPublicBloggerThemeXmlRouteImport } from './routes/api/public/blogger-theme.xml'
@@ -55,6 +56,12 @@ const AuthenticatedAdminIndexRoute = AuthenticatedAdminIndexRouteImport.update({
   path: '/',
   getParentRoute: () => AuthenticatedAdminRouteRoute,
 } as any)
+const AuthenticatedAdminCategoriesRoute =
+  AuthenticatedAdminCategoriesRouteImport.update({
+    id: '/categories',
+    path: '/categories',
+    getParentRoute: () => AuthenticatedAdminRouteRoute,
+  } as any)
 const AuthenticatedAdminPostsIndexRoute =
   AuthenticatedAdminPostsIndexRouteImport.update({
     id: '/posts/',
@@ -85,6 +92,7 @@ export interface FileRoutesByFullPath {
   '/admin': typeof AuthenticatedAdminRouteRouteWithChildren
   '/blog/$slug': typeof BlogSlugRoute
   '/blog/': typeof BlogIndexRoute
+  '/admin/categories': typeof AuthenticatedAdminCategoriesRoute
   '/admin/': typeof AuthenticatedAdminIndexRoute
   '/admin/posts/$id': typeof AuthenticatedAdminPostsIdRoute
   '/api/public/blogger-theme/xml': typeof ApiPublicBloggerThemeXmlRoute
@@ -96,6 +104,7 @@ export interface FileRoutesByTo {
   '/auth': typeof AuthRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/blog': typeof BlogIndexRoute
+  '/admin/categories': typeof AuthenticatedAdminCategoriesRoute
   '/admin': typeof AuthenticatedAdminIndexRoute
   '/admin/posts/$id': typeof AuthenticatedAdminPostsIdRoute
   '/api/public/blogger-theme/xml': typeof ApiPublicBloggerThemeXmlRoute
@@ -110,6 +119,7 @@ export interface FileRoutesById {
   '/_authenticated/admin': typeof AuthenticatedAdminRouteRouteWithChildren
   '/blog/$slug': typeof BlogSlugRoute
   '/blog/': typeof BlogIndexRoute
+  '/_authenticated/admin/categories': typeof AuthenticatedAdminCategoriesRoute
   '/_authenticated/admin/': typeof AuthenticatedAdminIndexRoute
   '/_authenticated/admin/posts/$id': typeof AuthenticatedAdminPostsIdRoute
   '/api/public/blogger-theme/xml': typeof ApiPublicBloggerThemeXmlRoute
@@ -124,6 +134,7 @@ export interface FileRouteTypes {
     | '/admin'
     | '/blog/$slug'
     | '/blog/'
+    | '/admin/categories'
     | '/admin/'
     | '/admin/posts/$id'
     | '/api/public/blogger-theme/xml'
@@ -135,6 +146,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/blog/$slug'
     | '/blog'
+    | '/admin/categories'
     | '/admin'
     | '/admin/posts/$id'
     | '/api/public/blogger-theme/xml'
@@ -148,6 +160,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin'
     | '/blog/$slug'
     | '/blog/'
+    | '/_authenticated/admin/categories'
     | '/_authenticated/admin/'
     | '/_authenticated/admin/posts/$id'
     | '/api/public/blogger-theme/xml'
@@ -216,6 +229,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminIndexRouteImport
       parentRoute: typeof AuthenticatedAdminRouteRoute
     }
+    '/_authenticated/admin/categories': {
+      id: '/_authenticated/admin/categories'
+      path: '/categories'
+      fullPath: '/admin/categories'
+      preLoaderRoute: typeof AuthenticatedAdminCategoriesRouteImport
+      parentRoute: typeof AuthenticatedAdminRouteRoute
+    }
     '/_authenticated/admin/posts/': {
       id: '/_authenticated/admin/posts/'
       path: '/posts'
@@ -248,6 +268,7 @@ declare module '@tanstack/react-router' {
 }
 
 interface AuthenticatedAdminRouteRouteChildren {
+  AuthenticatedAdminCategoriesRoute: typeof AuthenticatedAdminCategoriesRoute
   AuthenticatedAdminIndexRoute: typeof AuthenticatedAdminIndexRoute
   AuthenticatedAdminPostsIdRoute: typeof AuthenticatedAdminPostsIdRoute
   AuthenticatedAdminPostsIndexRoute: typeof AuthenticatedAdminPostsIndexRoute
@@ -255,6 +276,7 @@ interface AuthenticatedAdminRouteRouteChildren {
 
 const AuthenticatedAdminRouteRouteChildren: AuthenticatedAdminRouteRouteChildren =
   {
+    AuthenticatedAdminCategoriesRoute: AuthenticatedAdminCategoriesRoute,
     AuthenticatedAdminIndexRoute: AuthenticatedAdminIndexRoute,
     AuthenticatedAdminPostsIdRoute: AuthenticatedAdminPostsIdRoute,
     AuthenticatedAdminPostsIndexRoute: AuthenticatedAdminPostsIndexRoute,
