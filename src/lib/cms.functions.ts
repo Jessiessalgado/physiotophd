@@ -225,7 +225,7 @@ export const moderateComment = createServerFn({ method: "POST" })
   .inputValidator((d: { id: string; status?: string; admin_reply?: string }) => d)
   .handler(async ({ data, context }) => {
     await assertAdmin(context);
-    const patch: Record<string, any> = {};
+    const patch: any = {};
     if (data.status) patch.status = data.status;
     if (data.admin_reply !== undefined) {
       patch.admin_reply = data.admin_reply;
