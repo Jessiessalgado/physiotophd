@@ -15,6 +15,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as BlogIndexRouteImport } from './routes/blog.index'
 import { Route as BlogSlugRouteImport } from './routes/blog.$slug'
 import { Route as AuthenticatedAdminRouteRouteImport } from './routes/_authenticated/admin/route'
+import { Route as AuthenticatedAdminIndexRouteImport } from './routes/_authenticated/admin/index'
 import { Route as ApiPublicPostImageSplatRouteImport } from './routes/api/public/post-image.$'
 import { Route as ApiPublicBloggerThemeXmlRouteImport } from './routes/api/public/blogger-theme.xml'
 
@@ -47,6 +48,11 @@ const AuthenticatedAdminRouteRoute = AuthenticatedAdminRouteRouteImport.update({
   path: '/admin',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedAdminIndexRoute = AuthenticatedAdminIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AuthenticatedAdminRouteRoute,
+} as any)
 const ApiPublicPostImageSplatRoute = ApiPublicPostImageSplatRouteImport.update({
   id: '/api/public/post-image/$',
   path: '/api/public/post-image/$',
@@ -62,18 +68,19 @@ const ApiPublicBloggerThemeXmlRoute =
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
-  '/admin': typeof AuthenticatedAdminRouteRoute
+  '/admin': typeof AuthenticatedAdminRouteRouteWithChildren
   '/blog/$slug': typeof BlogSlugRoute
   '/blog/': typeof BlogIndexRoute
+  '/admin/': typeof AuthenticatedAdminIndexRoute
   '/api/public/blogger-theme/xml': typeof ApiPublicBloggerThemeXmlRoute
   '/api/public/post-image/$': typeof ApiPublicPostImageSplatRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
-  '/admin': typeof AuthenticatedAdminRouteRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/blog': typeof BlogIndexRoute
+  '/admin': typeof AuthenticatedAdminIndexRoute
   '/api/public/blogger-theme/xml': typeof ApiPublicBloggerThemeXmlRoute
   '/api/public/post-image/$': typeof ApiPublicPostImageSplatRoute
 }
@@ -82,9 +89,10 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/auth': typeof AuthRoute
-  '/_authenticated/admin': typeof AuthenticatedAdminRouteRoute
+  '/_authenticated/admin': typeof AuthenticatedAdminRouteRouteWithChildren
   '/blog/$slug': typeof BlogSlugRoute
   '/blog/': typeof BlogIndexRoute
+  '/_authenticated/admin/': typeof AuthenticatedAdminIndexRoute
   '/api/public/blogger-theme/xml': typeof ApiPublicBloggerThemeXmlRoute
   '/api/public/post-image/$': typeof ApiPublicPostImageSplatRoute
 }
@@ -96,15 +104,16 @@ export interface FileRouteTypes {
     | '/admin'
     | '/blog/$slug'
     | '/blog/'
+    | '/admin/'
     | '/api/public/blogger-theme/xml'
     | '/api/public/post-image/$'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/auth'
-    | '/admin'
     | '/blog/$slug'
     | '/blog'
+    | '/admin'
     | '/api/public/blogger-theme/xml'
     | '/api/public/post-image/$'
   id:
@@ -115,6 +124,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin'
     | '/blog/$slug'
     | '/blog/'
+    | '/_authenticated/admin/'
     | '/api/public/blogger-theme/xml'
     | '/api/public/post-image/$'
   fileRoutesById: FileRoutesById
@@ -173,6 +183,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminRouteRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/admin/': {
+      id: '/_authenticated/admin/'
+      path: '/'
+      fullPath: '/admin/'
+      preLoaderRoute: typeof AuthenticatedAdminIndexRouteImport
+      parentRoute: typeof AuthenticatedAdminRouteRoute
+    }
     '/api/public/post-image/$': {
       id: '/api/public/post-image/$'
       path: '/api/public/post-image/$'
@@ -190,12 +207,26 @@ declare module '@tanstack/react-router' {
   }
 }
 
+interface AuthenticatedAdminRouteRouteChildren {
+  AuthenticatedAdminIndexRoute: typeof AuthenticatedAdminIndexRoute
+}
+
+const AuthenticatedAdminRouteRouteChildren: AuthenticatedAdminRouteRouteChildren =
+  {
+    AuthenticatedAdminIndexRoute: AuthenticatedAdminIndexRoute,
+  }
+
+const AuthenticatedAdminRouteRouteWithChildren =
+  AuthenticatedAdminRouteRoute._addFileChildren(
+    AuthenticatedAdminRouteRouteChildren,
+  )
+
 interface AuthenticatedRouteRouteChildren {
-  AuthenticatedAdminRouteRoute: typeof AuthenticatedAdminRouteRoute
+  AuthenticatedAdminRouteRoute: typeof AuthenticatedAdminRouteRouteWithChildren
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
-  AuthenticatedAdminRouteRoute: AuthenticatedAdminRouteRoute,
+  AuthenticatedAdminRouteRoute: AuthenticatedAdminRouteRouteWithChildren,
 }
 
 const AuthenticatedRouteRouteWithChildren =
