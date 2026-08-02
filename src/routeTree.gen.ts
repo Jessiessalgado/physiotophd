@@ -19,6 +19,7 @@ import { Route as AuthenticatedAdminIndexRouteImport } from './routes/_authentic
 import { Route as AuthenticatedAdminPostsIndexRouteImport } from './routes/_authenticated/admin/posts.index'
 import { Route as ApiPublicPostImageSplatRouteImport } from './routes/api/public/post-image.$'
 import { Route as ApiPublicBloggerThemeXmlRouteImport } from './routes/api/public/blogger-theme.xml'
+import { Route as AuthenticatedAdminPostsIdRouteImport } from './routes/_authenticated/admin/posts.$id'
 
 const AuthRoute = AuthRouteImport.update({
   id: '/auth',
@@ -71,6 +72,12 @@ const ApiPublicBloggerThemeXmlRoute =
     path: '/api/public/blogger-theme/xml',
     getParentRoute: () => rootRouteImport,
   } as any)
+const AuthenticatedAdminPostsIdRoute =
+  AuthenticatedAdminPostsIdRouteImport.update({
+    id: '/posts/$id',
+    path: '/posts/$id',
+    getParentRoute: () => AuthenticatedAdminRouteRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -79,6 +86,7 @@ export interface FileRoutesByFullPath {
   '/blog/$slug': typeof BlogSlugRoute
   '/blog/': typeof BlogIndexRoute
   '/admin/': typeof AuthenticatedAdminIndexRoute
+  '/admin/posts/$id': typeof AuthenticatedAdminPostsIdRoute
   '/api/public/blogger-theme/xml': typeof ApiPublicBloggerThemeXmlRoute
   '/api/public/post-image/$': typeof ApiPublicPostImageSplatRoute
   '/admin/posts/': typeof AuthenticatedAdminPostsIndexRoute
@@ -89,6 +97,7 @@ export interface FileRoutesByTo {
   '/blog/$slug': typeof BlogSlugRoute
   '/blog': typeof BlogIndexRoute
   '/admin': typeof AuthenticatedAdminIndexRoute
+  '/admin/posts/$id': typeof AuthenticatedAdminPostsIdRoute
   '/api/public/blogger-theme/xml': typeof ApiPublicBloggerThemeXmlRoute
   '/api/public/post-image/$': typeof ApiPublicPostImageSplatRoute
   '/admin/posts': typeof AuthenticatedAdminPostsIndexRoute
@@ -102,6 +111,7 @@ export interface FileRoutesById {
   '/blog/$slug': typeof BlogSlugRoute
   '/blog/': typeof BlogIndexRoute
   '/_authenticated/admin/': typeof AuthenticatedAdminIndexRoute
+  '/_authenticated/admin/posts/$id': typeof AuthenticatedAdminPostsIdRoute
   '/api/public/blogger-theme/xml': typeof ApiPublicBloggerThemeXmlRoute
   '/api/public/post-image/$': typeof ApiPublicPostImageSplatRoute
   '/_authenticated/admin/posts/': typeof AuthenticatedAdminPostsIndexRoute
@@ -115,6 +125,7 @@ export interface FileRouteTypes {
     | '/blog/$slug'
     | '/blog/'
     | '/admin/'
+    | '/admin/posts/$id'
     | '/api/public/blogger-theme/xml'
     | '/api/public/post-image/$'
     | '/admin/posts/'
@@ -125,6 +136,7 @@ export interface FileRouteTypes {
     | '/blog/$slug'
     | '/blog'
     | '/admin'
+    | '/admin/posts/$id'
     | '/api/public/blogger-theme/xml'
     | '/api/public/post-image/$'
     | '/admin/posts'
@@ -137,6 +149,7 @@ export interface FileRouteTypes {
     | '/blog/$slug'
     | '/blog/'
     | '/_authenticated/admin/'
+    | '/_authenticated/admin/posts/$id'
     | '/api/public/blogger-theme/xml'
     | '/api/public/post-image/$'
     | '/_authenticated/admin/posts/'
@@ -224,17 +237,26 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiPublicBloggerThemeXmlRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authenticated/admin/posts/$id': {
+      id: '/_authenticated/admin/posts/$id'
+      path: '/posts/$id'
+      fullPath: '/admin/posts/$id'
+      preLoaderRoute: typeof AuthenticatedAdminPostsIdRouteImport
+      parentRoute: typeof AuthenticatedAdminRouteRoute
+    }
   }
 }
 
 interface AuthenticatedAdminRouteRouteChildren {
   AuthenticatedAdminIndexRoute: typeof AuthenticatedAdminIndexRoute
+  AuthenticatedAdminPostsIdRoute: typeof AuthenticatedAdminPostsIdRoute
   AuthenticatedAdminPostsIndexRoute: typeof AuthenticatedAdminPostsIndexRoute
 }
 
 const AuthenticatedAdminRouteRouteChildren: AuthenticatedAdminRouteRouteChildren =
   {
     AuthenticatedAdminIndexRoute: AuthenticatedAdminIndexRoute,
+    AuthenticatedAdminPostsIdRoute: AuthenticatedAdminPostsIdRoute,
     AuthenticatedAdminPostsIndexRoute: AuthenticatedAdminPostsIndexRoute,
   }
 

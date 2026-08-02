@@ -106,7 +106,7 @@ function Editor() {
 
   const contentHtml = mode === "markdown" ? markdownToHtml(md) : form.content;
   const checks = useMemo(
-    () => seoChecks({ ...form, content: contentHtml, metaDescription: form.meta_description }),
+    () => seoChecks({ ...form, content: contentHtml, cover: form.cover_image_url, metaDescription: form.meta_description }),
     [form, contentHtml],
   );
   const score = seoScore(checks);
