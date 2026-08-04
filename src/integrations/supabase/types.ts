@@ -357,6 +357,13 @@ export type Database = {
             referencedRelation: "authors"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "posts_author_id_fkey"
+            columns: ["author_id"]
+            isOneToOne: false
+            referencedRelation: "public_authors"
+            referencedColumns: ["id"]
+          },
         ]
       }
       settings: {
@@ -430,7 +437,86 @@ export type Database = {
       }
     }
     Views: {
-      [_ in never]: never
+      public_authors: {
+        Row: {
+          avatar_url: string | null
+          bio: string | null
+          created_at: string | null
+          id: string | null
+          name: string | null
+          role_title: string | null
+          slug: string | null
+          socials: Json | null
+          updated_at: string | null
+          website: string | null
+        }
+        Insert: {
+          avatar_url?: string | null
+          bio?: string | null
+          created_at?: string | null
+          id?: string | null
+          name?: string | null
+          role_title?: string | null
+          slug?: string | null
+          socials?: Json | null
+          updated_at?: string | null
+          website?: string | null
+        }
+        Update: {
+          avatar_url?: string | null
+          bio?: string | null
+          created_at?: string | null
+          id?: string | null
+          name?: string | null
+          role_title?: string | null
+          slug?: string | null
+          socials?: Json | null
+          updated_at?: string | null
+          website?: string | null
+        }
+        Relationships: []
+      }
+      public_comments: {
+        Row: {
+          admin_reply: string | null
+          author_name: string | null
+          content: string | null
+          created_at: string | null
+          id: string | null
+          post_id: string | null
+          replied_at: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          admin_reply?: string | null
+          author_name?: string | null
+          content?: string | null
+          created_at?: string | null
+          id?: string | null
+          post_id?: string | null
+          replied_at?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          admin_reply?: string | null
+          author_name?: string | null
+          content?: string | null
+          created_at?: string | null
+          id?: string | null
+          post_id?: string | null
+          replied_at?: string | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "comments_post_id_fkey"
+            columns: ["post_id"]
+            isOneToOne: false
+            referencedRelation: "posts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Functions: {
       has_role: {
