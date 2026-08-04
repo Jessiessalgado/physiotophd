@@ -124,7 +124,8 @@ function AdminShell() {
               {!collapsed && <span>Ver site</span>}
             </a>
             <a
-              href="/api/public/blogger-theme.xml"
+              href="/api/public/blogger-theme/xml"
+              download="blogger-theme.xml"
               className="flex items-center gap-3 rounded-lg px-3 py-2 text-sm text-muted-foreground hover:bg-muted hover:text-foreground"
             >
               <Download className="size-4 shrink-0" />
