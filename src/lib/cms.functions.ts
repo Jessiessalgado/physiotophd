@@ -250,7 +250,10 @@ export const deleteComment = createServerFn({ method: "POST" })
 
 export const listAuthors = createServerFn({ method: "GET" }).handler(async () => {
   const sb = publicClient();
-  const { data, error } = await sb.from("authors").select("*").order("name");
+  const { data, error } = await sb
+    .from("public_authors")
+    .select("id,slug,name,role_title,bio,avatar_url,website,socials,created_at,updated_at")
+    .order("name");
   if (error) throw new Error(error.message);
   return data ?? [];
 });
