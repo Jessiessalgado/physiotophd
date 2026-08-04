@@ -140,7 +140,10 @@ img { max-width: 100%; display: block; }
 .post-full .body blockquote { border-left: 4px solid #3b82f6; padding: 8px 16px; color: #334155; background: #f1f5f9; border-radius: 0 8px 8px 0; margin: 16px 0; }
 .post-full .body a { color: #1e3a8a; text-decoration: underline; }
 
-footer.site { text-align: center; padding: 40px 24px; color: #64748b; font-size: 14px; }
+footer.site { padding: 34px 24px; background: #0b1a4a; color: rgba(255,255,255,.7); font-size: 13px; text-align: center; }
+footer.site .links { display: flex; justify-content: center; flex-wrap: wrap; gap: 10px 28px; margin-bottom: 14px; }
+footer.site a { color: rgba(255,255,255,.88); text-decoration: none; }
+footer.site a:hover { color: #22d3ee; }
 `.replace(/]]>/g, "]]]]><![CDATA[>");
 
   return `<?xml version="1.0" encoding="UTF-8" ?>
@@ -207,7 +210,14 @@ footer.site { text-align: center; padding: 40px 24px; color: #64748b; font-size:
   </b:widget>
 </b:section>
 
-<footer class='site'>© <data:blog.title/> · Powered by Blogger</footer>
+<footer class='site'>
+  <nav class='links'>
+    <a href='/p/politica-de-privacidade.html'>Política de Privacidade</a>
+    <a href='/p/termos-de-uso.html'>Termos de Uso</a>
+    <a href='/p/sobre.html'>Sobre Mim / Sobre o Blog</a>
+  </nav>
+  <div>© 2026 PhysiotoPh.D. Todos os direitos reservados.</div>
+</footer>
 
 <!--
   Pre-seeded content export (${cats.length} categories, ${posts.length} posts) so you can
