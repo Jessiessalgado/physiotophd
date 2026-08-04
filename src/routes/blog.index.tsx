@@ -1,6 +1,7 @@
 import { createFileRoute, Link, useSearch } from "@tanstack/react-router";
 import { listPublishedPosts } from "@/lib/posts.functions";
 import { listCategories } from "@/lib/categories.functions";
+import { SiteFooter } from "@/components/SiteFooter";
 
 export const Route = createFileRoute("/blog/")({
   validateSearch: (s: Record<string, unknown>) => ({
@@ -70,6 +71,7 @@ function BlogList() {
           </div>
         )}
       </div>
+      <SiteFooter />
     </div>
   );
 }

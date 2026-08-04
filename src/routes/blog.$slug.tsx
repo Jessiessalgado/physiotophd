@@ -1,6 +1,7 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { getPostBySlug } from "@/lib/posts.functions";
 import { listCategories } from "@/lib/categories.functions";
+import { SiteFooter } from "@/components/SiteFooter";
 
 export const Route = createFileRoute("/blog/$slug")({
   loader: async ({ params }) => {
@@ -56,6 +57,7 @@ function PostPage() {
         {p.cover_image_url && <img src={p.cover_image_url} alt="" style={{ width: "100%", borderRadius: 14, marginTop: 24 }} />}
         <div style={{ marginTop: 32, fontSize: 17, lineHeight: 1.75, color: "#1e293b" }} dangerouslySetInnerHTML={{ __html: p.content ?? "" }} />
       </article>
+      <SiteFooter />
     </div>
   );
 }
