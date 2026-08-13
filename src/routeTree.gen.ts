@@ -13,6 +13,7 @@ import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as BlogIndexRouteImport } from './routes/blog.index'
+import { Route as PaginaSlugRouteImport } from './routes/pagina.$slug'
 import { Route as BlogSlugRouteImport } from './routes/blog.$slug'
 import { Route as AuthenticatedAdminRouteRouteImport } from './routes/_authenticated/admin/route'
 import { Route as AuthenticatedAdminIndexRouteImport } from './routes/_authenticated/admin/index'
@@ -50,6 +51,11 @@ const IndexRoute = IndexRouteImport.update({
 const BlogIndexRoute = BlogIndexRouteImport.update({
   id: '/blog/',
   path: '/blog/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PaginaSlugRoute = PaginaSlugRouteImport.update({
+  id: '/pagina/$slug',
+  path: '/pagina/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
 const BlogSlugRoute = BlogSlugRouteImport.update({
@@ -163,6 +169,7 @@ export interface FileRoutesByFullPath {
   '/auth': typeof AuthRoute
   '/admin': typeof AuthenticatedAdminRouteRouteWithChildren
   '/blog/$slug': typeof BlogSlugRoute
+  '/pagina/$slug': typeof PaginaSlugRoute
   '/blog/': typeof BlogIndexRoute
   '/admin/authors': typeof AuthenticatedAdminAuthorsRoute
   '/admin/backup': typeof AuthenticatedAdminBackupRoute
@@ -186,6 +193,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/blog/$slug': typeof BlogSlugRoute
+  '/pagina/$slug': typeof PaginaSlugRoute
   '/blog': typeof BlogIndexRoute
   '/admin/authors': typeof AuthenticatedAdminAuthorsRoute
   '/admin/backup': typeof AuthenticatedAdminBackupRoute
@@ -212,6 +220,7 @@ export interface FileRoutesById {
   '/auth': typeof AuthRoute
   '/_authenticated/admin': typeof AuthenticatedAdminRouteRouteWithChildren
   '/blog/$slug': typeof BlogSlugRoute
+  '/pagina/$slug': typeof PaginaSlugRoute
   '/blog/': typeof BlogIndexRoute
   '/_authenticated/admin/authors': typeof AuthenticatedAdminAuthorsRoute
   '/_authenticated/admin/backup': typeof AuthenticatedAdminBackupRoute
@@ -238,6 +247,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/admin'
     | '/blog/$slug'
+    | '/pagina/$slug'
     | '/blog/'
     | '/admin/authors'
     | '/admin/backup'
@@ -261,6 +271,7 @@ export interface FileRouteTypes {
     | '/'
     | '/auth'
     | '/blog/$slug'
+    | '/pagina/$slug'
     | '/blog'
     | '/admin/authors'
     | '/admin/backup'
@@ -286,6 +297,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/_authenticated/admin'
     | '/blog/$slug'
+    | '/pagina/$slug'
     | '/blog/'
     | '/_authenticated/admin/authors'
     | '/_authenticated/admin/backup'
@@ -311,6 +323,7 @@ export interface RootRouteChildren {
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   AuthRoute: typeof AuthRoute
   BlogSlugRoute: typeof BlogSlugRoute
+  PaginaSlugRoute: typeof PaginaSlugRoute
   BlogIndexRoute: typeof BlogIndexRoute
   ApiPublicBloggerThemeXmlRoute: typeof ApiPublicBloggerThemeXmlRoute
   ApiPublicPostImageSplatRoute: typeof ApiPublicPostImageSplatRoute
@@ -344,6 +357,13 @@ declare module '@tanstack/react-router' {
       path: '/blog'
       fullPath: '/blog/'
       preLoaderRoute: typeof BlogIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/pagina/$slug': {
+      id: '/pagina/$slug'
+      path: '/pagina/$slug'
+      fullPath: '/pagina/$slug'
+      preLoaderRoute: typeof PaginaSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/blog/$slug': {
@@ -540,6 +560,7 @@ const rootRouteChildren: RootRouteChildren = {
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   AuthRoute: AuthRoute,
   BlogSlugRoute: BlogSlugRoute,
+  PaginaSlugRoute: PaginaSlugRoute,
   BlogIndexRoute: BlogIndexRoute,
   ApiPublicBloggerThemeXmlRoute: ApiPublicBloggerThemeXmlRoute,
   ApiPublicPostImageSplatRoute: ApiPublicPostImageSplatRoute,
