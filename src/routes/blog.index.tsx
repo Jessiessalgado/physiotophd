@@ -4,7 +4,7 @@ import { listCategories } from "@/lib/categories.functions";
 import { SiteFooter } from "@/components/SiteFooter";
 
 export const Route = createFileRoute("/blog/")({
-  validateSearch: (s: Record<string, unknown>) => ({
+  validateSearch: (s: Record<string, unknown>): { category?: string } => ({
     category: typeof s.category === "string" ? s.category : undefined,
   }),
   loaderDeps: ({ search }) => ({ category: search.category }),
