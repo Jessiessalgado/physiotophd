@@ -12,7 +12,7 @@ import { seoChecks, seoScore, SCIENTIFIC_TEMPLATE, TAG_SUGGESTIONS } from "@/lib
 import { CheckCircle2, Circle, FlaskConical } from "lucide-react";
 
 export const Route = createFileRoute("/_authenticated/admin/posts/$id")({
-  validateSearch: (s: Record<string, unknown>) => ({ template: (s.template as string) || "" }),
+  validateSearch: (s: Record<string, unknown>): { template?: string } => ({ template: (s.template as string) || undefined }),
   component: Editor,
   head: () => ({ meta: [{ title: "Editor — Physio to PhD" }] }),
 });

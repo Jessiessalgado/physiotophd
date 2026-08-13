@@ -28,7 +28,7 @@ export const Route = createFileRoute("/blog/$slug")({
   notFoundComponent: () => (
     <div style={{ padding: 40, textAlign: "center", fontFamily: "Inter, sans-serif" }}>
       <h1>Post not found</h1>
-      <Link to="/blog/">← Back to blog</Link>
+      <Link to="/blog">← Back to blog</Link>
     </div>
   ),
 });
@@ -41,11 +41,11 @@ function PostPage() {
       <header style={{ background: "white", boxShadow: "0 1px 3px rgba(0,0,0,0.04)" }}>
         <div style={{ maxWidth: 800, margin: "0 auto", padding: "16px 24px", display: "flex", justifyContent: "space-between" }}>
           <a href="/" style={{ textDecoration: "none", color: "#1e3a8a", fontFamily: "'Dancing Script', cursive", fontSize: 24 }}>Jessica Salgado</a>
-          <Link to="/blog/" style={{ color: "#334155", textDecoration: "none", fontSize: 14 }}>← Blog</Link>
+          <Link to="/blog" style={{ color: "#334155", textDecoration: "none", fontSize: 14 }}>← Blog</Link>
         </div>
       </header>
       <article style={{ maxWidth: 760, margin: "0 auto", padding: "40px 24px" }}>
-        <Link to="/blog/" search={{ category: p.category }} style={{ color: "#3b82f6", fontSize: 13, fontWeight: 600, textDecoration: "none", textTransform: "uppercase", letterSpacing: 0.5 }}>
+        <Link to="/blog" search={{ category: p.category }} style={{ color: "#3b82f6", fontSize: 13, fontWeight: 600, textDecoration: "none", textTransform: "uppercase", letterSpacing: 0.5 }}>
           {label}
         </Link>
         <h1 style={{ margin: "8px 0 12px", fontSize: 36, color: "#0f172a", lineHeight: 1.2 }}>{p.title}</h1>

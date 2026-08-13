@@ -146,6 +146,31 @@ export const deletePage = createServerFn({ method: "POST" })
     return { ok: true };
   });
 
+export const listPublicPages = createServerFn({ method: "GET" }).handler(async () => {
+  const sb = publicClient();
+  const { data, error } = await sb
+    .from("pages")
+    .select("slug,title,excerpt,sort_order")
+    .eq("published", true)
+    .order("sort_order");
+  if (error) throw new Error(error.message);
+  return data ?? [];
+});
+
+export const getPublicPage = createServerFn({ method: "GET" })
+  .inputValidator((d: { slug: string }) => d)
+  .handler(async ({ data }) => {
+    const sb = publicClient();
+    const { data: row, error } = await sb
+      .from("pages")
+      .select("slug,title,excerpt,content,meta_description")
+      .eq("slug", data.slug)
+      .eq("published", true)
+      .maybeSingle();
+    if (error) throw new Error(error.message);
+    return row;
+  });
+
 /* ============================== MEDIA ============================= */
 
 export const listMedia = createServerFn({ method: "GET" })
