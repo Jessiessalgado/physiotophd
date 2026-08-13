@@ -46,9 +46,9 @@ function BlogList() {
         <p style={{ color: "#64748b", marginTop: 8 }}>{category ? label(category) : "All research areas"}</p>
 
         <nav style={{ display: "flex", flexWrap: "wrap", gap: 8, margin: "20px 0 32px" }}>
-          <Link to="/blog/" search={{ category: undefined }} style={chip(!category)}>All</Link>
+          <Link to="/blog" search={{ category: undefined }} style={chip(!category)}>All</Link>
           {categories.map((c: any) => (
-            <Link key={c.slug} to="/blog/" search={{ category: c.slug }} style={chip(category === c.slug)}>
+            <Link key={c.slug} to="/blog" search={{ category: c.slug }} style={chip(category === c.slug)}>
               {c.label}
             </Link>
           ))}
@@ -83,7 +83,7 @@ function TopBar() {
         <a href="/" style={{ textDecoration: "none", color: "#1e3a8a", fontFamily: "'Dancing Script', cursive", fontSize: 24, fontWeight: 700 }}>Jessica Salgado</a>
         <nav style={{ display: "flex", gap: 20, fontSize: 14 }}>
           <a href="/" style={navL}>Home</a>
-          <Link to="/blog/" style={{ ...navL, color: "#1e3a8a", fontWeight: 600 }}>Blog</Link>
+          <Link to="/blog" style={{ ...navL, color: "#1e3a8a", fontWeight: 600 }}>Blog</Link>
         </nav>
       </div>
     </header>
