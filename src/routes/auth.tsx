@@ -5,7 +5,7 @@ import { useServerFn } from "@tanstack/react-start";
 import { bootstrapFirstAdmin } from "@/lib/posts.functions";
 
 export const Route = createFileRoute("/auth")({
-  validateSearch: (s: Record<string, unknown>) => ({
+  validateSearch: (s: Record<string, unknown>): { mode?: "login" | "signup" } => ({
     mode: (s.mode === "signup" ? "signup" : "login") as "login" | "signup",
   }),
   component: AuthPage,
@@ -13,7 +13,7 @@ export const Route = createFileRoute("/auth")({
 });
 
 function AuthPage() {
-  const { mode } = useSearch({ from: "/auth" });
+  const { mode = "login" } = useSearch({ from: "/auth" });
   const navigate = useNavigate();
   const promote = useServerFn(bootstrapFirstAdmin);
   const [email, setEmail] = useState("");
