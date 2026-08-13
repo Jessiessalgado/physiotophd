@@ -215,6 +215,7 @@ footer.site a:hover { color: #22d3ee; }
     <a href='/p/politica-de-privacidade.html'>Política de Privacidade</a>
     <a href='/p/termos-de-uso.html'>Termos de Uso</a>
     <a href='/p/sobre.html'>Sobre Mim / Sobre o Blog</a>
+    <a href='/p/contatos.html'>Contato</a>
   </nav>
   <div>© 2026 PhysiotoPh.D. Todos os direitos reservados.</div>
 </footer>
