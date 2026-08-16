@@ -1,6 +1,7 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { getPublicPage } from "@/lib/cms.functions";
 import { SiteFooter } from "@/components/SiteFooter";
+import { ContactForm } from "@/components/ContactForm";
 
 export const Route = createFileRoute("/pagina/$slug")({
   loader: async ({ params }) => {
@@ -46,6 +47,7 @@ function PagePublic() {
           style={{ fontSize: 17, lineHeight: 1.75, color: "#1e293b" }}
           dangerouslySetInnerHTML={{ __html: page.content ?? "" }}
         />
+        {page.slug === "contato" && <ContactForm />}
       </article>
       <SiteFooter />
     </div>
