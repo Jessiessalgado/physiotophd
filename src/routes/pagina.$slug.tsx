@@ -46,6 +46,7 @@ function PagePublic() {
           style={{ fontSize: 17, lineHeight: 1.75, color: "#1e293b" }}
           dangerouslySetInnerHTML={{ __html: page.content ?? "" }}
         />
+        {page.slug === "contato" && <ContactForm />}
       </article>
       <SiteFooter />
     </div>
