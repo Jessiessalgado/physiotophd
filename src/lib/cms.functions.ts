@@ -480,3 +480,20 @@ export const importBackup = createServerFn({ method: "POST" })
     }
     return counts;
   });
+
+/* ========================= CONTACT MESSAGES ======================= */
+
+export const submitContactMessage = createServerFn({ method: "POST" })
+  .inputValidator((d: { name: string; email: string; message: string }) => d)
+  .handler(async ({ data }) => {
+    const name = (data.name ?? "").trim();
+    const email = (data.email ?? "").trim().toLowerCase();
+    const message = (data.message ?? "").trim();
+    if (name.length < 2 || name.length > 120) throw new Error("Informe seu nome.");
+    if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email) || email.length > 200) throw new Error("E-mail inválido.");
+    if (message.length < 5 || message.length > 5000) throw new Error("Escreva sua mensagem.");
+    const sb = publicClient();
+    const { error } = await sb.from("contact_messages").insert({ name, email, message, status: "new" });
+    if (error) throw new Error(error.message);
+    return { ok: true };
+  });
