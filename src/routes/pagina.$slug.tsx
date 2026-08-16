@@ -1,6 +1,7 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { getPublicPage } from "@/lib/cms.functions";
 import { SiteFooter } from "@/components/SiteFooter";
+import { ContactForm } from "@/components/ContactForm";
 
 export const Route = createFileRoute("/pagina/$slug")({
   loader: async ({ params }) => {
