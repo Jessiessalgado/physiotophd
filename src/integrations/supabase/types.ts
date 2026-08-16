@@ -485,7 +485,6 @@ export type Database = {
           id: string | null
           post_id: string | null
           replied_at: string | null
-          updated_at: string | null
         }
         Insert: {
           admin_reply?: string | null
@@ -495,7 +494,6 @@ export type Database = {
           id?: string | null
           post_id?: string | null
           replied_at?: string | null
-          updated_at?: string | null
         }
         Update: {
           admin_reply?: string | null
@@ -505,7 +503,6 @@ export type Database = {
           id?: string | null
           post_id?: string | null
           replied_at?: string | null
-          updated_at?: string | null
         }
         Relationships: [
           {
