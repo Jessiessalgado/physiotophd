@@ -1,0 +1,12 @@
+# Physio to PhD — Jessica Salgado
+
+> Bridging Physiotherapy and Technology: research and articles on neurorehabilitation using virtual reality, robotics, biomechanics and digital health.
+
+## Pages
+
+- [Home](/): Portfolio and research areas of Jessica Salgado, physiotherapist and researcher.
+- [Blog](/blog): Articles on physiotherapy and rehabilitation technology.
+- [Sobre](/pagina/sobre): About Jessica Salgado and the blog.
+- [Contato](/pagina/contato): Contact details and contact form.
+- [Termos de Uso](/pagina/termos-de-uso): Terms of use.
+- [Política de Privacidade](/pagina/politica-de-privacidade): Privacy policy.
