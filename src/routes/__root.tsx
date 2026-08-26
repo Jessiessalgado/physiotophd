@@ -77,18 +77,28 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Lovable App" },
-      { name: "description", content: "Pixel Perfect Replica transforms an image into a functional website, replicating every visual element precisely." },
-      { name: "author", content: "Lovable" },
-      { property: "og:title", content: "Lovable App" },
-      { property: "og:description", content: "Pixel Perfect Replica transforms an image into a functional website, replicating every visual element precisely." },
+      { title: "Jessica Salgado — Physiotherapist & Researcher" },
+      {
+        name: "description",
+        content:
+          "Bridging Physiotherapy and Technology — innovative approaches in neurorehabilitation using VR, biomechanics and digital health.",
+      },
+      { name: "author", content: "Jessica Salgado" },
+      { property: "og:site_name", content: "Physio to PhD" },
+      { property: "og:title", content: "Jessica Salgado — Physiotherapist & Researcher" },
+      {
+        property: "og:description",
+        content:
+          "Bridging Physiotherapy and Technology — innovative approaches in neurorehabilitation using VR, biomechanics and digital health.",
+      },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
-      { name: "twitter:site", content: "@Lovable" },
-      { name: "twitter:title", content: "Lovable App" },
-      { name: "twitter:description", content: "Pixel Perfect Replica transforms an image into a functional website, replicating every visual element precisely." },
-      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/13a6ff16-42d9-454c-99f6-616805f4f802/id-preview-dba311fb--4c2c55b7-a84e-4edd-b743-6ab18a882001.lovable.app-1784345616364.png" },
-      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/13a6ff16-42d9-454c-99f6-616805f4f802/id-preview-dba311fb--4c2c55b7-a84e-4edd-b743-6ab18a882001.lovable.app-1784345616364.png" },
+      { name: "twitter:title", content: "Jessica Salgado — Physiotherapist & Researcher" },
+      {
+        name: "twitter:description",
+        content:
+          "Bridging Physiotherapy and Technology — innovative approaches in neurorehabilitation using VR, biomechanics and digital health.",
+      },
     ],
     links: [
       {
@@ -96,7 +106,29 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         href: appCss,
       },
     ],
+    scripts: [
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "Person",
+          name: "Jessica Salgado",
+          jobTitle: "Physiotherapist & Researcher",
+          url: "https://physiotophd.lovable.app",
+          description:
+            "Physiotherapist and researcher specialising in neurorehabilitation and rehabilitation technology — virtual reality, robotics, biomechanics and digital health.",
+          knowsAbout: [
+            "Neurorehabilitation",
+            "Physiotherapy",
+            "Virtual reality rehabilitation",
+            "Biomechanics",
+            "Digital health",
+          ],
+        }),
+      },
+    ],
   }),
+
   shellComponent: RootShell,
   component: RootComponent,
   notFoundComponent: NotFoundComponent,
