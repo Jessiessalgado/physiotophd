@@ -52,11 +52,27 @@ export function RichTextEditor({
   }
 
   function exec(cmd: string, arg?: string) {
-    ref.current?.focus();
-    restoreSelection();
+    const el = ref.current;
+    if (!el) return;
+    el.focus();
+    const sel = window.getSelection();
+    const inside = sel && sel.rangeCount && el.contains(sel.anchorNode);
+    if (!inside) {
+      if (savedRange.current && el.contains(savedRange.current.startContainer)) {
+        restoreSelection();
+      } else {
+        const r = document.createRange();
+        r.selectNodeContents(el);
+        r.collapse(false);
+        sel?.removeAllRanges();
+        sel?.addRange(r);
+      }
+    }
     document.execCommand(cmd, false, arg);
+    saveSelection();
     emit();
   }
+
 
   function link() {
     saveSelection();
