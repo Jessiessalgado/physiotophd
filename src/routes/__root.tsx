@@ -114,7 +114,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
           "@type": "Person",
           name: "Jessica Salgado",
           jobTitle: "Physiotherapist & Researcher",
-          url: "https://physiotophd.vercel.app",
+          url: "https://physiotophd.lovable.app",
           description:
             "Physiotherapist and researcher specialising in neurorehabilitation and rehabilitation technology — virtual reality, robotics, biomechanics and digital health.",
           knowsAbout: [
