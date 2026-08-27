@@ -52,11 +52,27 @@ export function RichTextEditor({
   }
 
   function exec(cmd: string, arg?: string) {
-    ref.current?.focus();
-    restoreSelection();
+    const el = ref.current;
+    if (!el) return;
+    el.focus();
+    const sel = window.getSelection();
+    const inside = sel && sel.rangeCount && el.contains(sel.anchorNode);
+    if (!inside) {
+      if (savedRange.current && el.contains(savedRange.current.startContainer)) {
+        restoreSelection();
+      } else {
+        const r = document.createRange();
+        r.selectNodeContents(el);
+        r.collapse(false);
+        sel?.removeAllRanges();
+        sel?.addRange(r);
+      }
+    }
     document.execCommand(cmd, false, arg);
+    saveSelection();
     emit();
   }
+
 
   function link() {
     saveSelection();
@@ -184,18 +200,30 @@ export function RichTextEditor({
           style={{ width: "100%", minHeight: 320, border: 0, padding: 14, fontFamily: "ui-monospace, Menlo, monospace", fontSize: 13, outline: "none", resize: "vertical", boxSizing: "border-box" }}
         />
       ) : (
-        <div
-          ref={ref}
-          contentEditable
-          onInput={emit}
-          onBlur={() => { saveSelection(); emit(); }}
-          onKeyUp={saveSelection}
-          onMouseUp={saveSelection}
-          onPaste={() => setTimeout(emit, 0)}
-          suppressContentEditableWarning
-          style={{ minHeight: 320, padding: 16, outline: "none", fontSize: 15, lineHeight: 1.7, color: "#1e293b" }}
-        />
+        <>
+          <style>{`
+            .rte-content ul { list-style: disc outside; padding-left: 1.6em; margin: 0.6em 0; }
+            .rte-content ol { list-style: decimal outside; padding-left: 1.6em; margin: 0.6em 0; }
+            .rte-content ul ul { list-style: circle outside; }
+            .rte-content ol ol { list-style: lower-alpha outside; }
+            .rte-content li { display: list-item; margin: 0.2em 0; }
+            .rte-content blockquote { border-left: 3px solid #cbd5e1; margin: 0.8em 0; padding-left: 12px; color: #475569; }
+          `}</style>
+          <div
+            ref={ref}
+            className="rte-content"
+            contentEditable
+            onInput={emit}
+            onBlur={() => { saveSelection(); emit(); }}
+            onKeyUp={saveSelection}
+            onMouseUp={saveSelection}
+            onPaste={() => setTimeout(emit, 0)}
+            suppressContentEditableWarning
+            style={{ minHeight: 320, padding: 16, outline: "none", fontSize: 15, lineHeight: 1.7, color: "#1e293b" }}
+          />
+        </>
       )}
+
     </div>
   );
 }
