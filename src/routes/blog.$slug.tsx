@@ -55,7 +55,17 @@ function PostPage() {
           </div>
         )}
         {p.cover_image_url && <img src={p.cover_image_url} alt="" style={{ width: "100%", borderRadius: 14, marginTop: 24 }} />}
-        <div style={{ marginTop: 32, fontSize: 17, lineHeight: 1.75, color: "#1e293b" }} dangerouslySetInnerHTML={{ __html: p.content ?? "" }} />
+        <style>{`
+          .post-content ul { list-style: disc outside; padding-left: 1.6em; margin: 0.8em 0; }
+          .post-content ol { list-style: decimal outside; padding-left: 1.6em; margin: 0.8em 0; }
+          .post-content ul ul { list-style: circle outside; }
+          .post-content ol ol { list-style: lower-alpha outside; }
+          .post-content li { display: list-item; margin: 0.3em 0; }
+          .post-content blockquote { border-left: 3px solid #cbd5e1; margin: 1em 0; padding-left: 14px; color: #475569; }
+          .post-content img { max-width: 100%; border-radius: 12px; }
+        `}</style>
+        <div className="post-content" style={{ marginTop: 32, fontSize: 17, lineHeight: 1.75, color: "#1e293b" }} dangerouslySetInnerHTML={{ __html: p.content ?? "" }} />
+
       </article>
       <SiteFooter />
     </div>
