@@ -2,7 +2,7 @@
 
 An interdisciplinary digital health platform connecting physiotherapy, rehabilitation technology, neuroscience, and evidence-based practice.
 
-[Visit the live project](https://physiotophd.vercel.app)
+[Visit the live project](https://physiotophd.lovable.app)
 
 ## Overview
 
